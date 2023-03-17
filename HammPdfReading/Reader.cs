@@ -3,7 +3,7 @@ using iTextSharp.text.pdf.parser;
 using System.Text.RegularExpressions;
 
 namespace Infor.HammPdfReading {
-    public enum UnitType {
+    public enum Unit {
         PC,
         M
     }
@@ -13,19 +13,19 @@ namespace Infor.HammPdfReading {
         public int PartNo;
         public ValueTuple<int, int> ValidFor;
         public int Quantity;
-        public UnitType Type;
+        public Unit Unit;
         public string Designation;
 
         public override string ToString() {
-            string UnitTypeToString(UnitType type) {
-                return type switch {
-                    UnitType.PC => "PC",
-                    UnitType.M => "M",
+            string UnitToString(Unit unit) {
+                return unit switch {
+                    Unit.PC => "PC",
+                    Unit.M => "M",
                     _ => "PC"
                 };
             }
 
-            return $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {UnitTypeToString(Type)} {Designation}";
+            return $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {UnitToString(Unit)} {Designation}";
         }
 
         public static implicit operator Detail(string s) {
@@ -34,11 +34,11 @@ namespace Infor.HammPdfReading {
                 return new ValueTuple<int, int>(Convert.ToInt32(array[0]), Convert.ToInt32(array[1]));
             }
 
-            UnitType ToUnitType(string s) {
+            Unit ToUnitType(string s) {
                 return s switch {
-                    "PC" => UnitType.PC,
-                    "M" => UnitType.M,
-                    _ => UnitType.PC
+                    "PC" => Unit.PC,
+                    "M" => Unit.M,
+                    _ => Unit.PC
                 };
             }
 
@@ -48,7 +48,7 @@ namespace Infor.HammPdfReading {
                 PartNo = Convert.ToInt32(details[1]),
                 ValidFor = ToValidFor(details[2]),
                 Quantity = Convert.ToInt32(details[3]),
-                Type = ToUnitType(details[4]),
+                Unit = ToUnitType(details[4]),
                 Designation = details[6]
             };
         }
