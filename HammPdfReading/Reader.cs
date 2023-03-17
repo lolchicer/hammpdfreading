@@ -55,30 +55,6 @@ namespace Infor.HammPdfReading {
     }
 
     public static class Reader {
-        public static List<string> Details(PdfPage page) {
-            var details = new List<string>();
-
-            foreach (var key in page.Keys) {
-                var object_ = (PdfDictionary)page.Get(key);
-                details.Add(object_.Get(PdfName.TEXT).ToString());
-            }
-
-            return details;
-        }
-
-        public static List<string> Details(PdfDictionary dictionary) {
-            var details = new List<string>();
-            var objects = new List<PdfObject>();
-
-            foreach (var key in dictionary.Keys) {
-                var object_ = dictionary.Get(key);
-                objects.Add(object_);
-                // details.Add(object_.Get(PdfName.TEXT).ToString());
-            }
-
-            return details;
-        }
-
         public static List<string> Details(string line) {
             var details = new List<string>();
 
