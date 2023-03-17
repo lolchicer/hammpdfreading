@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33417.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading", "HammPdfReading\HammPdfReading.csproj", "{7CC7E18B-AAE8-455C-9EB2-129A767740B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{DA268BE0-AB41-4555-876F-114C53DDEAC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test02", "Test02\Test02.csproj", "{6877E2C2-0671-44D8-BE85-956B3A5CE40E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CC7E18B-AAE8-455C-9EB2-129A767740B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CC7E18B-AAE8-455C-9EB2-129A767740B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CC7E18B-AAE8-455C-9EB2-129A767740B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CC7E18B-AAE8-455C-9EB2-129A767740B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA268BE0-AB41-4555-876F-114C53DDEAC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA268BE0-AB41-4555-876F-114C53DDEAC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA268BE0-AB41-4555-876F-114C53DDEAC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA268BE0-AB41-4555-876F-114C53DDEAC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6877E2C2-0671-44D8-BE85-956B3A5CE40E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6877E2C2-0671-44D8-BE85-956B3A5CE40E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6877E2C2-0671-44D8-BE85-956B3A5CE40E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6877E2C2-0671-44D8-BE85-956B3A5CE40E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C222F22-FF98-47BB-AD6D-74D93AB11E13}
+	EndGlobalSection
+EndGlobal
