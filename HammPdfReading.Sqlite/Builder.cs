@@ -2,7 +2,7 @@
 using Infor.HammPdfReading;
 
 namespace Infor.HammPdfReading.Sqlite {
-    public static class Builder {
+    public class Builder {
         public static void Build(string path) {
             var connection = new SqliteConnection($"DataSource={path}");
             connection.Open();
@@ -19,6 +19,22 @@ namespace Infor.HammPdfReading.Sqlite {
                 "   designation TEXT NOT NULL" +
                 ")";
             command.ExecuteNonQuery();
+        }
+
+        public static void Insert(string path, Detail detail) {
+            var connection = new SqliteConnection($"DataSource={path}");
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = $"" +
+                $"INSERT INTO details (item, part_no, valid_for_1, valid_for_2, quantity, unit, designation)" +
+                $"VALUES ({detail.Item}, {detail.PartNo}, {detail.ValidFor.Item1}, {detail.ValidFor.Item2}, {detail.Quantity}, {(int)detail.Unit}, \"{detail.Designation}\")";
+            command.ExecuteNonQuery();
+        }
+
+        public static void Insert(string path, Detail[] details) {
+            foreach (var detail in details)
+                Insert(path, detail);
         }
     }
 }
