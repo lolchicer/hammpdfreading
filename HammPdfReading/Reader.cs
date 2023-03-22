@@ -34,24 +34,24 @@ namespace Infor.HammPdfReading
             return $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {UnitToString(Unit)} {Designation}";
         }
 
+        static ValueTuple<int, int> ToValidFor(string s)
+        {
+            string[] array = s.Split('-');
+            return new ValueTuple<int, int>(Convert.ToInt32(array[0]), Convert.ToInt32(array[1]));
+        }
+
+        static Unit ToUnitType(string s)
+        {
+            return s switch
+            {
+                "PC" => Unit.PC,
+                "M" => Unit.M,
+                _ => Unit.PC
+            };
+        }
+
         public static implicit operator Detail(string s)
         {
-            ValueTuple<int, int> ToValidFor(string s)
-            {
-                string[] array = s.Split('-');
-                return new ValueTuple<int, int>(Convert.ToInt32(array[0]), Convert.ToInt32(array[1]));
-            }
-
-            Unit ToUnitType(string s)
-            {
-                return s switch
-                {
-                    "PC" => Unit.PC,
-                    "M" => Unit.M,
-                    _ => Unit.PC
-                };
-            }
-
             var details = Reader.Details(s);
             return new Detail()
             {
@@ -63,18 +63,29 @@ namespace Infor.HammPdfReading
                 Designation = details[6]
             };
         }
+
+        public static Detail FromFields(List<string> fields) => new Detail()
+        {
+            Item = Convert.ToDouble(fields[0].Replace('.', ',')),
+            PartNo = Convert.ToInt32(fields[1]),
+            ValidFor = ToValidFor(fields[2]),
+            Quantity = Convert.ToDouble(fields[3]),
+            Unit = ToUnitType(fields[4]),
+            Designation = fields[6]
+        };
     }
 
     public static class Reader
     {
+        static string[] _regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-Я]+", ".+" };
+
         public static List<string> Details(string line)
         {
             var details = new List<string>();
 
             var lineCut = line;
-            var regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-Я]+", ".+" };
             string detail;
-            foreach (var regex in regexes)
+            foreach (var regex in _regexes)
             {
                 detail = Regex.Match(lineCut, regex).Value;
                 detail = detail.Trim();
@@ -97,8 +108,24 @@ namespace Infor.HammPdfReading
                 "(.|\n)*" +
                 "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})");
 
+            var matrix = new List<List<string>>();
+
             foreach (var line in match.Value.Split('\n'))
-                details.Add((Detail)line);
+                matrix.Add(Details(line));
+
+            var buff = new List<string>(new string[7]);
+
+            foreach (var row in matrix)
+            {
+                for (int i = 0; i < buff.Count; i++)
+                    buff[i] += row[i];
+                if (!buff.Contains(string.Empty))
+                {
+                    details.Add(Detail.FromFields(buff));
+                    for (int i = 0; i < buff.Count; i++)
+                        buff[i] = string.Empty;
+                }
+            }
 
             return details;
         }
