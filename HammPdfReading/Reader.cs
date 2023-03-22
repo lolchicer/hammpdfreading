@@ -15,7 +15,7 @@ namespace Infor.HammPdfReading
         public double Item;
         public int PartNo;
         public ValueTuple<int, int> ValidFor;
-        public int Quantity;
+        public double Quantity;
         public Unit Unit;
         public string Designation;
 
@@ -55,10 +55,10 @@ namespace Infor.HammPdfReading
             var details = Reader.Details(s);
             return new Detail()
             {
-                Item = Convert.ToDouble(details[0]),
+                Item = Convert.ToDouble(details[0].Replace('.', ',')),
                 PartNo = Convert.ToInt32(details[1]),
                 ValidFor = ToValidFor(details[2]),
-                Quantity = Convert.ToInt32(details[3]),
+                Quantity = Convert.ToDouble(details[3]),
                 Unit = ToUnitType(details[4]),
                 Designation = details[6]
             };

@@ -14,7 +14,7 @@ namespace Infor.HammPdfReading.Sqlite {
                 "   part_no INTEGER PRIMARY KEY," +
                 "   valid_for_1 INTEGER NOT NULL," +
                 "   valid_for_2 INTEGER NOT NULL," +
-                "   quantity INTEGER NOT NULL," +
+                "   quantity REAL NOT NULL," +
                 "   unit INTEGER NOT NULL," +
                 "   designation TEXT NOT NULL" +
                 ")";
@@ -28,7 +28,13 @@ namespace Infor.HammPdfReading.Sqlite {
             var command = connection.CreateCommand();
             command.CommandText = $"" +
                 $"INSERT INTO details (item, part_no, valid_for_1, valid_for_2, quantity, unit, designation)" +
-                $"VALUES ({detail.Item}, {detail.PartNo}, {detail.ValidFor.Item1}, {detail.ValidFor.Item2}, {detail.Quantity}, {(int)detail.Unit}, \"{detail.Designation}\")";
+                $"VALUES ({detail.Item.ToString().Replace(',', '.')}, " +
+                $"{detail.PartNo}, " +
+                $"{detail.ValidFor.Item1}, " +
+                $"{detail.ValidFor.Item2}, " +
+                $"{detail.Quantity.ToString().Replace(',', '.')}, " +
+                $"{(int)detail.Unit}, " +
+                $"\"{detail.Designation}\")";
             command.ExecuteNonQuery();
         }
 
