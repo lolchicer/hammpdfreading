@@ -2,13 +2,16 @@
 using iTextSharp.text.pdf.parser;
 using System.Text.RegularExpressions;
 
-namespace Infor.HammPdfReading {
-    public enum Unit {
+namespace Infor.HammPdfReading
+{
+    public enum Unit
+    {
         PC,
         M
     }
 
-    public struct Detail {
+    public struct Detail
+    {
         public double Item;
         public int PartNo;
         public ValueTuple<int, int> ValidFor;
@@ -16,9 +19,12 @@ namespace Infor.HammPdfReading {
         public Unit Unit;
         public string Designation;
 
-        public override string ToString() {
-            string UnitToString(Unit unit) {
-                return unit switch {
+        public override string ToString()
+        {
+            string UnitToString(Unit unit)
+            {
+                return unit switch
+                {
                     Unit.PC => "PC",
                     Unit.M => "M",
                     _ => "PC"
@@ -28,14 +34,18 @@ namespace Infor.HammPdfReading {
             return $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {UnitToString(Unit)} {Designation}";
         }
 
-        public static implicit operator Detail(string s) {
-            ValueTuple<int, int> ToValidFor(string s) {
+        public static implicit operator Detail(string s)
+        {
+            ValueTuple<int, int> ToValidFor(string s)
+            {
                 string[] array = s.Split('-');
                 return new ValueTuple<int, int>(Convert.ToInt32(array[0]), Convert.ToInt32(array[1]));
             }
 
-            Unit ToUnitType(string s) {
-                return s switch {
+            Unit ToUnitType(string s)
+            {
+                return s switch
+                {
                     "PC" => Unit.PC,
                     "M" => Unit.M,
                     _ => Unit.PC
@@ -43,7 +53,8 @@ namespace Infor.HammPdfReading {
             }
 
             var details = Reader.Details(s);
-            return new Detail() {
+            return new Detail()
+            {
                 Item = Convert.ToDouble(details[0]),
                 PartNo = Convert.ToInt32(details[1]),
                 ValidFor = ToValidFor(details[2]),
@@ -54,14 +65,17 @@ namespace Infor.HammPdfReading {
         }
     }
 
-    public static class Reader {
-        public static List<string> Details(string line) {
+    public static class Reader
+    {
+        public static List<string> Details(string line)
+        {
             var details = new List<string>();
 
             var lineCut = line;
             var regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-Я]+", ".+" };
             string detail;
-            foreach (var regex in regexes) {
+            foreach (var regex in regexes)
+            {
                 detail = Regex.Match(lineCut, regex).Value;
                 detail = detail.Trim();
                 details.Add(detail);
@@ -72,15 +86,19 @@ namespace Infor.HammPdfReading {
             return details;
         }
 
-        public static List<string> Details(PdfReader reader, int page) {
-            var details = new List<string>();
+        public static List<Detail> Details(PdfReader reader, int page)
+        {
+            var details = new List<Detail>();
             var strategy = new SimpleTextExtractionStrategy();
 
             var text = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
-            var pars = text.Split(new[] { "Ед.", "Benennung" }, StringSplitOptions.None);
+            var match = Regex.Match(text,
+                "(?<=Ед\\.\n)" +
+                "(.|\n)*" +
+                "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})");
 
-            foreach (var line in pars[2].Split("\n"))
-                details.AddRange(Details(line));
+            foreach (var line in match.Value.Split('\n'))
+                details.Add((Detail)line);
 
             return details;
         }

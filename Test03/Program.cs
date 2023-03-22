@@ -3,11 +3,13 @@ using iTextSharp.text.pdf;
 using Infor.HammPdfReading;
 using Infor.HammPdfReading.Sqlite;
 
-Console.WriteLine("строка:");
-Detail detail = (Detail)Console.ReadLine();
+Console.WriteLine("путь к документу:");
+var reader = new PdfReader(Console.ReadLine());
+var details = Reader.Details(reader, 53);
 
 Console.WriteLine("путь к базе:");
 var path = Console.ReadLine();
 
 Builder.Build(path);
-Builder.Insert(path, detail);
+foreach (var item in details)
+    Builder.Insert(path, item);
