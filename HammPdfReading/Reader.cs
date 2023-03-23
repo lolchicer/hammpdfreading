@@ -77,7 +77,7 @@ namespace Infor.HammPdfReading
 
     public static class Reader
     {
-        static string[] _regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-Я]+", ".+" };
+        static string[] _regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-я]+", ".+" };
 
         static string Field(string line, int i)
         {
