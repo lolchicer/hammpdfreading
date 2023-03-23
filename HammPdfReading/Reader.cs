@@ -113,17 +113,49 @@ namespace Infor.HammPdfReading
             foreach (var line in match.Value.Split('\n'))
                 matrix.Add(Details(line));
 
-            var buff = new List<string>(new string[7]);
+            var buffMatrix = new List<List<string>>();
 
             foreach (var row in matrix)
             {
-                for (int i = 0; i < buff.Count; i++)
-                    buff[i] += row[i];
-                if (!buff.Contains(string.Empty))
+                // поиск значений для каждого поля
+                buffMatrix.Add(row);
+
+                var buffContains = new List<bool>(new bool[7]);
+                for (int i = 0; i < row.Count; i++)
+                    if (row[i] != null)
+                        buffContains[i] = true;
+
+                // после успешного поиска значений для каждого поля
+                if (!buffContains.Contains(false))
                 {
-                    details.Add(Detail.FromFields(buff));
-                    for (int i = 0; i < buff.Count; i++)
-                        buff[i] = string.Empty;
+                    // проверка на симметрию
+                    var buffSymmetric = true;
+
+                    var count = buffMatrix.Count;
+                    if (count % 2 != 0)
+                    {
+                        count /= 2;
+                        count += 1;
+                    }
+
+                    for (int j = 0; j < count / 2; j++)
+                        for (int i = 0; i < 7; i++)
+                            if (!(buffMatrix[j][i] != null && buffMatrix[buffMatrix.Count - 1 - j][i] != null))
+                                buffSymmetric = false;
+
+                    // соединение полей
+                    var buffSingle = new List<string>();
+
+                    if (buffSymmetric)
+                        for (int i = 0; i < 7; i++)
+                        {
+                            buffSingle.Add(string.Empty);
+                            foreach (var buffRow in buffMatrix)
+                                buffSingle[i] += buffRow[i];
+                        }
+
+                    // конец
+                    details.Add(Detail.FromFields(buffSingle));
                 }
             }
 
