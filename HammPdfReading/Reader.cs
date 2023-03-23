@@ -79,6 +79,15 @@ namespace Infor.HammPdfReading
     {
         static string[] _regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-Я]+", ".+" };
 
+        static string Field(string line, int i)
+        {
+            string field;
+            field = Regex.Match(line, _regexes[i]).Value;
+            field = field.Trim();
+            return field;
+        }
+
+        // _regexes[6] почему-то не считает первую букву "С" в "СФЕРО-ЦИЛИНДРИЧЕСКОЙ" на странице 215
         public static List<string> Details(string line)
         {
             var details = new List<string>();
@@ -97,6 +106,13 @@ namespace Infor.HammPdfReading
             return details;
         }
 
+        public static List<string> Designations(string line) =>
+            new List<string>()
+            {
+                Field(line, 5),
+                Field(line, 6)
+            };
+
         public static List<Detail> Details(PdfReader reader, int page)
         {
             var details = new List<Detail>();
@@ -108,55 +124,22 @@ namespace Infor.HammPdfReading
                 "(.|\n)*" +
                 "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})");
 
-            var matrix = new List<List<string>>();
-
             foreach (var line in match.Value.Split('\n'))
-                matrix.Add(Details(line));
-
-            var buffMatrix = new List<List<string>>();
-
-            foreach (var row in matrix)
             {
-                // поиск значений для каждого поля
-                buffMatrix.Add(row);
-
-                var buffContains = new List<bool>(new bool[7]);
-                for (int i = 0; i < row.Count; i++)
-                    if (row[i] != null)
-                        buffContains[i] = true;
-
-                // после успешного поиска значений для каждого поля
-                if (!buffContains.Contains(false))
+                var row = Details(line);
+                if (row[1] != string.Empty)
                 {
-                    // проверка на симметрию
-                    var buffSymmetric = true;
-
-                    var count = buffMatrix.Count;
-                    if (count % 2 != 0)
-                    {
-                        count /= 2;
-                        count += 1;
-                    }
-
-                    for (int j = 0; j < count / 2; j++)
-                        for (int i = 0; i < 7; i++)
-                            if (!(buffMatrix[j][i] != null && buffMatrix[buffMatrix.Count - 1 - j][i] != null))
-                                buffSymmetric = false;
-
-                    // соединение полей
-                    var buffSingle = new List<string>();
-
-                    if (buffSymmetric)
-                        for (int i = 0; i < 7; i++)
-                        {
-                            buffSingle.Add(string.Empty);
-                            foreach (var buffRow in buffMatrix)
-                                buffSingle[i] += buffRow[i];
-                        }
-
-                    // конец
-                    details.Add(Detail.FromFields(buffSingle));
+                    details.Add(Detail.FromFields(row));
                 }
+                else
+                {
+                    var i = details.Count - 1;
+                    var replacing = details[i];
+                    replacing.Designation += ' ' + row[6];
+                    replacing.Designation = replacing.Designation.Trim();
+                    details.RemoveAt(i);
+                    details.Add(replacing);
+                }   
             }
 
             return details;
