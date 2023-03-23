@@ -52,7 +52,7 @@ namespace Infor.HammPdfReading
 
         public static implicit operator Detail(string s)
         {
-            var details = Reader.Details(s);
+            var details = Reader.Fields(s);
             return new Detail()
             {
                 Item = Convert.ToDouble(details[0].Replace('.', ',')),
@@ -88,22 +88,22 @@ namespace Infor.HammPdfReading
         }
 
         // _regexes[6] почему-то не считает первую букву "С" в "СФЕРО-ЦИЛИНДРИЧЕСКОЙ" на странице 215
-        public static List<string> Details(string line)
+        public static List<string> Fields(string line)
         {
-            var details = new List<string>();
+            var fields = new List<string>();
 
             var lineCut = line;
-            string detail;
+            string field;
             foreach (var regex in _regexes)
             {
-                detail = Regex.Match(lineCut, regex).Value;
-                detail = detail.Trim();
-                details.Add(detail);
+                field = Regex.Match(lineCut, regex).Value;
+                field = field.Trim();
+                fields.Add(field);
                 lineCut = lineCut.Trim();
-                lineCut = lineCut.Remove(0, detail.Length);
+                lineCut = lineCut.Remove(0, field.Length);
             };
 
-            return details;
+            return fields;
         }
 
         public static List<string> Designations(string line) =>
@@ -115,7 +115,6 @@ namespace Infor.HammPdfReading
 
         public static List<Detail> Details(PdfReader reader, int page)
         {
-            var details = new List<Detail>();
             var strategy = new SimpleTextExtractionStrategy();
 
             var text = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
@@ -124,9 +123,16 @@ namespace Infor.HammPdfReading
                 "(.|\n)*" +
                 "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})");
 
-            foreach (var line in match.Value.Split('\n'))
+            return Details(match.Value);
+        }
+
+        public static List<Detail> Details(string text)
+        {
+            var details = new List<Detail>();
+
+            foreach (var line in text.Split('\n'))
             {
-                var row = Details(line);
+                var row = Fields(line);
                 if (row[1] != string.Empty)
                 {
                     details.Add(Detail.FromFields(row));
@@ -139,7 +145,7 @@ namespace Infor.HammPdfReading
                     replacing.Designation = replacing.Designation.Trim();
                     details.RemoveAt(i);
                     details.Add(replacing);
-                }   
+                }
             }
 
             return details;
