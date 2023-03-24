@@ -100,12 +100,31 @@ namespace Infor.HammPdfReading
             return value;
         }
 
-        static string[] _regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-я]+", ".+" };
+        public static class Regexes
+        {
+            public const string Item = "[0-9]+(\\.[0-9]{2})?";
+            public const string PartNo = "[0-9]+";
+            public const string ValidFor = "[0-9]{1,4}-[0-9]{1,4}";
+            public const string Quantity = "[0-9]+";
+            public const string Unit = "[A-Z]{1,2}";
+            public const string DesignationSpace = "[^А-я]+";
+            public const string DesignationRussian = ".+";
 
-        static string Field(string line, int i)
+            public static List<string> List() => new List<string>() {
+                Item,
+                PartNo,
+                ValidFor,
+                Quantity,
+                Unit,
+                DesignationSpace,
+                DesignationRussian
+            };
+        }
+
+        static string Field(string line, string regex)
         {
             string field;
-            field = Regex.Match(line, _regexes[i]).Value;
+            field = Regex.Match(line, regex).Value;
             field = field.Trim();
             return field;
         }
@@ -117,7 +136,7 @@ namespace Infor.HammPdfReading
 
             var lineCut = line;
             string field;
-            foreach (var regex in _regexes)
+            foreach (var regex in Regexes.List())
             {
                 field = Regex.Match(lineCut, regex).Value;
                 field = field.Trim();
@@ -132,8 +151,8 @@ namespace Infor.HammPdfReading
         public static List<string> Designations(string line) =>
             new List<string>()
             {
-                Field(line, 5),
-                Field(line, 6)
+                Field(line, Regexes.DesignationSpace),
+                Field(line, Regexes.DesignationRussian)
             };
 
         public static List<Detail> Details(PdfReader reader, int page)
@@ -177,7 +196,7 @@ namespace Infor.HammPdfReading
         public static List<string> PageInfo(string text) => ContinuousMatch(text, new List<string>(new[]
             {
                 "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}",
-                _regexes[1],
+                Regexes.PartNo,
                 "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}",
                 "[^ ]*",
                 ".*"
