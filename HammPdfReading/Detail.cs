@@ -1,6 +1,6 @@
 ﻿using Infor.HammPdfReading;
 
-namespace HammPdfReading
+namespace Infor.HammPdfReading
 {
     public enum Unit
     {
