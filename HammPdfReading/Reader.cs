@@ -75,8 +75,31 @@ namespace Infor.HammPdfReading
         };
     }
 
+    public struct ExtendedDetail
+    {
+        public Detail Detail { get; set; }
+        public int Assembly { get; set; }
+    }
+
     public static class Reader
     {
+        static List<string> ContinuousMatch(string text, List<string> regexes)
+        {
+            var value = new List<string>();
+
+            var textCut = text;
+            foreach (var regex in regexes)
+            {
+                var item = Regex.Match(textCut, regex).Value;
+                item = item.Trim();
+                value.Add(item);
+                textCut = textCut.Trim();
+                textCut = textCut.Remove(0, item.Length);
+            }
+
+            return value;
+        }
+
         static string[] _regexes = new[] { "[0-9]+(\\.[0-9]{2})?", "[0-9]+", "[0-9]{1,4}-[0-9]{1,4}", "[0-9]+", "[A-Z]{1,2}", "[^А-я]+", ".+" };
 
         static string Field(string line, int i)
@@ -147,6 +170,30 @@ namespace Infor.HammPdfReading
                     details.Add(replacing);
                 }
             }
+
+            return details;
+        }
+
+        public static List<string> PageInfo(string text) => ContinuousMatch(text, new List<string>(new[]
+            {
+                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}",
+                _regexes[1],
+                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}",
+                "[^ ]*",
+                ".*"
+            }));
+
+        public static List<ExtendedDetail> ExtendedDetails(PdfReader reader, int page)
+        {
+            var strategy = new SimpleTextExtractionStrategy();
+            var text = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
+
+            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
+
+            var details = new List<ExtendedDetail>();
+
+            foreach (var detail in Details(reader, page))
+                details.Add(new ExtendedDetail() { Detail = detail, Assembly = Convert.ToInt32(pageInfo[1]) });
 
             return details;
         }
