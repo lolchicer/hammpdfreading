@@ -2,51 +2,16 @@
 
 namespace Infor.HammPdfReading
 {
-    public enum Unit
+    public struct Detail : IDetail
     {
-        PC,
-        M
-    }
+        public double Item { get; set; }
+        public int PartNo { get; set; }
+        public ValueTuple<int, int> ValidFor { get; set; }
+        public double Quantity { get; set; }
+        public Unit Unit { get; set; }
+        public string Designation { get; set; }
 
-    public struct Detail
-    {
-        public double Item;
-        public int PartNo;
-        public ValueTuple<int, int> ValidFor;
-        public double Quantity;
-        public Unit Unit;
-        public string Designation;
-
-        public override string ToString()
-        {
-            string UnitToString(Unit unit)
-            {
-                return unit switch
-                {
-                    Unit.PC => "PC",
-                    Unit.M => "M",
-                    _ => "PC"
-                };
-            }
-
-            return $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {UnitToString(Unit)} {Designation}";
-        }
-
-        static ValueTuple<int, int> ToValidFor(string s)
-        {
-            string[] array = s.Split('-');
-            return new ValueTuple<int, int>(Convert.ToInt32(array[0]), Convert.ToInt32(array[1]));
-        }
-
-        static Unit ToUnitType(string s)
-        {
-            return s switch
-            {
-                "PC" => Unit.PC,
-                "M" => Unit.M,
-                _ => Unit.PC
-            };
-        }
+        public override string ToString() => $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {IDetail.UnitToString(Unit)} {Designation}";
 
         public static implicit operator Detail(string s)
         {
@@ -55,9 +20,9 @@ namespace Infor.HammPdfReading
             {
                 Item = Convert.ToDouble(details[0].Replace('.', ',')),
                 PartNo = Convert.ToInt32(details[1]),
-                ValidFor = ToValidFor(details[2]),
+                ValidFor = IDetail.ToValidFor(details[2]),
                 Quantity = Convert.ToDouble(details[3]),
-                Unit = ToUnitType(details[4]),
+                Unit = IDetail.ToUnitType(details[4]),
                 Designation = details[6]
             };
         }
@@ -66,16 +31,10 @@ namespace Infor.HammPdfReading
         {
             Item = Convert.ToDouble(fields[0].Replace('.', ',')),
             PartNo = Convert.ToInt32(fields[1]),
-            ValidFor = ToValidFor(fields[2]),
+            ValidFor = IDetail.ToValidFor(fields[2]),
             Quantity = Convert.ToDouble(fields[3]),
-            Unit = ToUnitType(fields[4]),
+            Unit = IDetail.ToUnitType(fields[4]),
             Designation = fields[6]
         };
-    }
-
-    public struct ExtendedDetail
-    {
-        public Detail Detail { get; set; }
-        public int Assembly { get; set; }
     }
 }
