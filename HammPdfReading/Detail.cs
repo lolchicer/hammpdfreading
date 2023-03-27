@@ -11,7 +11,7 @@ namespace Infor.HammPdfReading
         public Unit Unit { get; set; }
         public string Designation { get; set; }
 
-        public override string ToString() => $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {IDetail.UnitToString(Unit)} {Designation}";
+        public override string ToString() => ((IDetail)this).ToString();
 
         public static implicit operator Detail(string s)
         {

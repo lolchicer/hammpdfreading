@@ -9,7 +9,7 @@
         public Unit Unit { get; set; }
         public string Designation { get; set; }
 
-        public string ToString();
+        public string ToString() => $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {UnitToString(Unit)} {Designation}";
 
         static ValueTuple<int, int> ToValidFor(string s)
         {
