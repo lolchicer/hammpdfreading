@@ -4,25 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace Infor.HammPdfReading
 {
-    public static class Reader
+    public class Reader
     {
-        static List<string> ContinuousMatch(string text, List<string> regexes)
-        {
-            var value = new List<string>();
-
-            var textCut = text;
-            foreach (var regex in regexes)
-            {
-                var item = Regex.Match(textCut, regex).Value;
-                item = item.Trim();
-                value.Add(item);
-                textCut = textCut.Trim();
-                textCut = textCut.Remove(0, item.Length);
-            }
-
-            return value;
-        }
-
         public static class Regexes
         {
             public const string Item = "[0-9]+(\\.[0-9]{2})?";
@@ -44,52 +27,43 @@ namespace Infor.HammPdfReading
             };
         }
 
-        static string Field(string line, string regex)
+        static List<string> ContinuousMatch(string text, List<string> regexes)
         {
-            string field;
-            field = Regex.Match(line, regex).Value;
-            field = field.Trim();
-            return field;
-        }
+            var value = new List<string>();
 
-        // _regexes[6] почему-то не считает первую букву "С" в "СФЕРО-ЦИЛИНДРИЧЕСКОЙ" на странице 215
-        public static List<string> Fields(string line)
-        {
-            var fields = new List<string>();
-
-            var lineCut = line;
-            string field;
-            foreach (var regex in Regexes.List())
+            var textCut = text;
+            foreach (var regex in regexes)
             {
-                field = Regex.Match(lineCut, regex).Value;
-                field = field.Trim();
-                fields.Add(field);
-                lineCut = lineCut.Trim();
-                lineCut = lineCut.Remove(0, field.Length);
-            };
+                var item = Regex.Match(textCut, regex).Value;
+                item = item.Trim();
+                value.Add(item);
+                textCut = textCut.Trim();
+                textCut = textCut.Remove(0, item.Length);
+            }
 
-            return fields;
+            return value;
         }
 
-        public static List<string> Designations(string line) =>
+        static List<string> PageInfo(string text) => ContinuousMatch(text, new List<string>(new[]
+            {
+                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}",
+                Regexes.PartNo,
+                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}",
+                "[^ ]*",
+                ".*"
+            }));
+
+        static string Field(string line, string regex) => Regex.Match(line, regex).Value.Trim();
+
+        // Regexes.DesignationRussian почему-то не считает первую букву "С" в "СФЕРО-ЦИЛИНДРИЧЕСКОЙ" на странице 215
+        static List<string> Fields(string line) => ContinuousMatch(line, Regexes.List());
+
+        static List<string> Designations(string line) =>
             new List<string>()
             {
                 Field(line, Regexes.DesignationSpace),
                 Field(line, Regexes.DesignationRussian)
             };
-
-        public static List<Detail> Details(PdfReader reader, int page)
-        {
-            var strategy = new SimpleTextExtractionStrategy();
-
-            var text = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
-            var match = Regex.Match(text,
-                "(?<=Ед\\.\n)" +
-                "(.|\n)*" +
-                "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})");
-
-            return Details(match.Value);
-        }
 
         public static List<Detail> Details(string text)
         {
@@ -116,29 +90,40 @@ namespace Infor.HammPdfReading
             return details;
         }
 
-        public static List<string> PageInfo(string text) => ContinuousMatch(text, new List<string>(new[]
-            {
-                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}",
-                Regexes.PartNo,
-                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}",
-                "[^ ]*",
-                ".*"
-            }));
+        PdfReader _reader;
 
-        public static List<ExtendedDetail> ExtendedDetails(PdfReader reader, int page)
+        public List<Detail> Details(int page)
         {
             var strategy = new SimpleTextExtractionStrategy();
-            var text = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
+
+            var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
+            var match = Regex.Match(text,
+                "(?<=Ед\\.\n)" +
+                "(.|\n)*" +
+                "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})");
+
+            return Details(match.Value);
+        }
+
+        public List<ExtendedDetail> ExtendedDetails(int page)
+        {
+            var strategy = new SimpleTextExtractionStrategy();
+            var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
 
             var details = new List<ExtendedDetail>();
 
             var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
             var assembly = Convert.ToInt32(pageInfo[1]);
 
-            foreach (var detail in Details(reader, page))
+            foreach (var detail in Details(page))
                 details.Add(new ExtendedDetail() { Item = detail.Item, PartNo = detail.PartNo, ValidFor = detail.ValidFor, Quantity = detail.Quantity, Unit = detail.Unit, Assembly = assembly });
 
             return details;
+        }
+
+        public Reader(PdfReader reader)
+        {
+            _reader = reader;
         }
     }
 }

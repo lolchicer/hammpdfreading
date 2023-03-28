@@ -4,8 +4,8 @@ using Infor.HammPdfReading;
 using Infor.HammPdfReading.Sqlite;
 
 Console.WriteLine("путь к документу:");
-var reader = new PdfReader(Console.ReadLine());
-var details = Reader.ExtendedDetails(reader, 329);
+var reader = new Reader(new PdfReader(Console.ReadLine()));
+var details = reader.ExtendedDetails(329);
 
 Console.WriteLine("путь к базе:");
 var path = Console.ReadLine();

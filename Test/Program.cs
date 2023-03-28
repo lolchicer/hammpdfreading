@@ -1,12 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using iTextSharp;
 using iTextSharp.text.pdf;
+using Infor.HammPdfReading;
 
 Console.WriteLine("путь к файлу:");
 var path = Console.ReadLine();
 
-var reader = new PdfReader(path);
-var details = Infor.HammPdfReading.Reader.Details(reader, 37);
+var reader = new Reader(new PdfReader(path));
+var details = reader.Details(37);
 
 Console.WriteLine("поле:");
 var field = Convert.ToInt32(Console.ReadLine());
