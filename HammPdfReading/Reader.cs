@@ -130,12 +130,13 @@ namespace Infor.HammPdfReading
             var strategy = new SimpleTextExtractionStrategy();
             var text = PdfTextExtractor.GetTextFromPage(reader, page, strategy);
 
-            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
-
             var details = new List<ExtendedDetail>();
 
+            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
+            var assembly = Convert.ToInt32(pageInfo[1]);
+
             foreach (var detail in Details(reader, page))
-                details.Add(new ExtendedDetail() { Detail = detail, Assembly = Convert.ToInt32(pageInfo[1]) });
+                details.Add(new ExtendedDetail() { Item = detail.Item, PartNo = detail.PartNo, ValidFor = detail.ValidFor, Quantity = detail.Quantity, Unit = detail.Unit, Assembly = assembly });
 
             return details;
         }

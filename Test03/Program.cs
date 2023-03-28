@@ -10,6 +10,6 @@ var details = Reader.ExtendedDetails(reader, 329);
 Console.WriteLine("путь к базе:");
 var path = Console.ReadLine();
 
-Builder.Build(path);
-foreach (var item in details)
-    Builder.Insert(path, item);
+var builder = new Builder(path);
+builder.Build();
+builder.Insert(details.ToArray());

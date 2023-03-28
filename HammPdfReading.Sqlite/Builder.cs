@@ -1,47 +1,69 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using iTextSharp.text.pdf;
+using Microsoft.Data.Sqlite;
 
-namespace Infor.HammPdfReading.Sqlite {
-    public class Builder {
-        public static void Build(string path) {
-            var connection = new SqliteConnection($"DataSource={path}");
-            connection.Open();
+namespace Infor.HammPdfReading.Sqlite
+{
+    public class Builder
+    {
+        SqliteConnection _connection;
 
-            var command = connection.CreateCommand();
-            command.CommandText = "" +
-                "CREATE TABLE details (" +
-                "   item REAL NOT NULL," +
-                "   part_no INTEGER PRIMARY KEY," +
-                "   valid_for_1 INTEGER NOT NULL," +
-                "   valid_for_2 INTEGER NOT NULL," +
-                "   quantity REAL NOT NULL," +
-                "   unit INTEGER NOT NULL," +
-                "   designation TEXT NOT NULL," +
-                "   assembly INT NOT NULL" +
-                ")";
-            command.ExecuteNonQuery();
+        static string BuildQuery() =>
+            "CREATE TABLE details (" +
+            "   assembly INTEGER NOT NULL," +
+            "   item REAL NOT NULL," +
+            "   part_no INTEGER NOT NULL," +
+            "   valid_for_1 INTEGER NOT NULL," +
+            "   valid_for_2 INTEGER NOT NULL," +
+            "   quantity REAL NOT NULL," +
+            "   unit INTEGER NOT NULL," +
+            "   designation TEXT NOT NULL," +
+            "   PRIMARY KEY (assembly, item, part_no)" +
+            ")";
+
+        static string InsertQueryValues(ExtendedDetail detail) =>
+            $"({detail.Item.ToString().Replace(',', '.')}, " +
+            $"{detail.PartNo}, " +
+            $"{detail.ValidFor.Item1}, " +
+            $"{detail.ValidFor.Item2}, " +
+            $"{detail.Quantity.ToString().Replace(',', '.')}, " +
+            $"{(int)detail.Unit}, " +
+            $"\"{detail.Designation}\", " +
+            $"{detail.Assembly})";
+
+        static string[] InsertQueryValues(ExtendedDetail[] details) =>
+            details.Select(detail => InsertQueryValues(detail)).ToArray();
+
+        static string InsertQuery(ExtendedDetail detail) =>
+            $"INSERT INTO details (item, part_no, valid_for_1, valid_for_2, quantity, unit, designation, assembly)" +
+            $"VALUES {InsertQueryValues(detail)}";
+
+        static string InsertQuery(ExtendedDetail[] details) =>
+            $"INSERT INTO details (item, part_no, valid_for_1, valid_for_2, quantity, unit, designation, assembly)" +
+            $"VALUES {string.Concat(from detail in details where Array.IndexOf(details, detail) < details.Length - 1 select InsertQueryValues(detail) + ", ")}" +
+            $"{InsertQueryValues(details.Last())}";
+
+        void QuerySend(string query)
+        {
+            _connection.Open();
+            
+            using (SqliteCommand command = _connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.ExecuteNonQuery();
+            }
+
+            _connection.Close();
         }
 
-        public static void Insert(string path, ExtendedDetail detail) {
-            var connection = new SqliteConnection($"DataSource={path}");
-            connection.Open();
+        public void Build() => QuerySend(BuildQuery());
 
-            var command = connection.CreateCommand();
-            command.CommandText = $"" +
-                $"INSERT INTO details (item, part_no, valid_for_1, valid_for_2, quantity, unit, designation, assembly)" +
-                $"VALUES ({detail.Detail.Item.ToString().Replace(',', '.')}, " +
-                $"{detail.Detail.PartNo}, " +
-                $"{detail.Detail.ValidFor.Item1}, " +
-                $"{detail.Detail.ValidFor.Item2}, " +
-                $"{detail.Detail.Quantity.ToString().Replace(',', '.')}, " +
-                $"{(int)detail.Detail.Unit}, " +
-                $"\"{detail.Detail.Designation}\"," +
-                $"{detail.Assembly})";
-            command.ExecuteNonQuery();
-        }
+        public void Insert(ExtendedDetail detail) => QuerySend(InsertQuery(detail));
 
-        public static void Insert(string path, ExtendedDetail[] details) {
-            foreach (var detail in details)
-                Insert(path, detail);
+        public void Insert(ExtendedDetail[] details) => QuerySend(InsertQuery(details));
+
+        public Builder(string path)
+        {
+            _connection = new SqliteConnection($"DataSource={path}");
         }
     }
 }
