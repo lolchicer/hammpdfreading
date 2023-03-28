@@ -1,12 +1,9 @@
-﻿using iTextSharp.text.pdf;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 
 namespace Infor.HammPdfReading.Sqlite
 {
     public class Builder
     {
-        SqliteConnection _connection;
-
         static string BuildQuery() =>
             "CREATE TABLE details (" +
             "   assembly INTEGER NOT NULL," +
@@ -41,6 +38,8 @@ namespace Infor.HammPdfReading.Sqlite
             $"INSERT INTO details (item, part_no, valid_for_1, valid_for_2, quantity, unit, designation, assembly)" +
             $"VALUES {string.Concat(from detail in details where Array.IndexOf(details, detail) < details.Length - 1 select InsertQueryValues(detail) + ", ")}" +
             $"{InsertQueryValues(details.Last())}";
+
+        SqliteConnection _connection;
 
         void QuerySend(string query)
         {
