@@ -13,20 +13,6 @@ namespace Infor.HammPdfReading
 
         public override string ToString() => ((IDetail)this).ToString();
 
-        public static implicit operator Detail(string s)
-        {
-            var details = Reader.Fields(s);
-            return new Detail()
-            {
-                Item = Convert.ToDouble(details[0].Replace('.', ',')),
-                PartNo = Convert.ToInt32(details[1]),
-                ValidFor = IDetail.ToValidFor(details[2]),
-                Quantity = Convert.ToDouble(details[3]),
-                Unit = IDetail.ToUnitType(details[4]),
-                Designation = details[6]
-            };
-        }
-
         public static Detail FromFields(List<string> fields) => new Detail()
         {
             Item = Convert.ToDouble(fields[0].Replace('.', ',')),
