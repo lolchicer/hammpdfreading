@@ -1,6 +1,4 @@
-﻿using Infor.HammPdfReading;
-
-namespace Infor.HammPdfReading
+﻿namespace Infor.HammPdfReading
 {
     public struct Detail : IDetail
     {
