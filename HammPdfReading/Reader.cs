@@ -8,6 +8,11 @@ namespace Infor.HammPdfReading
     {
         public static class Regexes
         {
+            public const string Table =
+                "(?<=Ед\\.\n)" +
+                "(.|\n)*" +
+                "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})";
+
             public const string Item = "[0-9]+(\\.[0-9]{2})?";
             public const string PartNo = "[0-9]+";
             public const string ValidFor = "[0-9]{1,4}-[0-9]{1,4}";
@@ -65,9 +70,11 @@ namespace Infor.HammPdfReading
                 Field(line, Regexes.DesignationRussian)
             };
 
-        public static List<Detail> Details(string text)
+        static List<Detail> Details(string text)
         {
             var details = new List<Detail>();
+
+            text = Regex.Match(text, Regexes.Table).Value;
 
             foreach (var line in text.Split('\n'))
             {
@@ -90,6 +97,30 @@ namespace Infor.HammPdfReading
             return details;
         }
 
+        static List<ExtendedDetail> ExtendedDetails(string text)
+        {
+            var details = new List<ExtendedDetail>();
+
+            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
+            var assembly = Convert.ToInt32(pageInfo[1]);
+
+            foreach (var detail in Details(text))
+                details.Add(new ExtendedDetail()
+                {
+                    Item = detail.Item,
+                    PartNo = detail.PartNo,
+                    ValidFor = detail.ValidFor,
+                    Quantity = detail.Quantity,
+                    Unit = detail.Unit,
+                    Designation = detail.Designation,
+                    Assembly = assembly
+                });
+
+            return details;
+        }
+
+        static bool IsTablePage(string text) => Regex.IsMatch(text, Regexes.Table);
+
         PdfReader _reader;
 
         public List<Detail> Details(int page)
@@ -97,10 +128,7 @@ namespace Infor.HammPdfReading
             var strategy = new SimpleTextExtractionStrategy();
 
             var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
-            var match = Regex.Match(text,
-                "(?<=Ед\\.\n)" +
-                "(.|\n)*" +
-                "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})");
+            var match = Regex.Match(text, Regexes.Table);
 
             return Details(match.Value);
         }
@@ -108,18 +136,26 @@ namespace Infor.HammPdfReading
         public List<ExtendedDetail> ExtendedDetails(int page)
         {
             var strategy = new SimpleTextExtractionStrategy();
+
             var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
 
+            return ExtendedDetails(text);
+        }
+
+        public List<ExtendedDetail> ExtendedDetails(int page, int count)
+        {
             var details = new List<ExtendedDetail>();
-
-            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
-            var assembly = Convert.ToInt32(pageInfo[1]);
-
-            foreach (var detail in Details(page))
-                details.Add(new ExtendedDetail() { Item = detail.Item, PartNo = detail.PartNo, ValidFor = detail.ValidFor, Quantity = detail.Quantity, Unit = detail.Unit, Assembly = assembly });
-
+            for (int i = 0; i < count; i++)
+            {
+                var strategy = new SimpleTextExtractionStrategy();
+                var text = PdfTextExtractor.GetTextFromPage(_reader, page + i, strategy);
+                if (IsTablePage(text))
+                    details.AddRange(ExtendedDetails(text));
+            }
             return details;
         }
+
+        public List<ExtendedDetail> ExtendedDetails() => ExtendedDetails(1, _reader.NumberOfPages);
 
         public Reader(PdfReader reader)
         {
