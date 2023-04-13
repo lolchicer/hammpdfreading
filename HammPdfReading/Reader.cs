@@ -1,6 +1,7 @@
 ﻿using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Infor.HammPdfReading
 {
@@ -39,11 +40,13 @@ namespace Infor.HammPdfReading
             var textCut = text;
             foreach (var regex in regexes)
             {
-                var item = Regex.Match(textCut, regex).Value;
+                var match = Regex.Match(textCut, regex);
+                var item = match.Value;
                 item = item.Trim();
                 value.Add(item);
                 textCut = textCut.Trim();
-                textCut = textCut.Remove(0, item.Length);
+                textCut = textCut.Remove(0, match.Index + match.Length);
+                textCut = textCut.Trim();
             }
 
             return value;
@@ -54,7 +57,9 @@ namespace Infor.HammPdfReading
                 "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}",
                 Regexes.PartNo,
                 "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}",
-                "[^ ]*",
+                Regexes.DesignationSpace,
+                Regexes.DesignationRussian,
+                "ряд:",
                 ".*"
             }));
 
@@ -156,6 +161,35 @@ namespace Infor.HammPdfReading
         }
 
         public List<ExtendedDetail> ExtendedDetails() => ExtendedDetails(1, _reader.NumberOfPages);
+
+        public Module GetModule(string text)
+        {
+            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
+
+            return new Module() { No = Convert.ToInt32(pageInfo[1]), Assembly = pageInfo[0], Series = pageInfo[4], Designation = pageInfo[6] };
+        }
+
+        public Module GetModule(int page)
+        {
+            var strategy = new SimpleTextExtractionStrategy();
+
+            var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
+
+            return GetModule(text);
+        }
+
+        public Module[] GetModules(int page, int count)
+        {
+            var modules = new List<Module>();
+            for (int i = 0; i < count; i++)
+            {
+                var strategy = new SimpleTextExtractionStrategy();
+                var text = PdfTextExtractor.GetTextFromPage(_reader, page + i, strategy);
+                if (IsTablePage(text))
+                    modules.Add(GetModule(text));
+            }
+            return modules.ToArray();
+        }
 
         public Reader(PdfReader reader)
         {

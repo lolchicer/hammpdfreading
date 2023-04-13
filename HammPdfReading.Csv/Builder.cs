@@ -35,6 +35,32 @@ namespace Infor.HammPdfReading.Csv
             }
         }
 
+        public void Join(ExtendedDetail[] details, Module[] modules)
+        {
+            using (StreamWriter writer = new StreamWriter(_path, true, Encoding.UTF8))
+            {
+                using (CsvWriter csvWriter = new CsvWriter(writer, new CultureInfo("ru-RU", false)))
+                {
+                    csvWriter.WriteHeader<Detail>();
+                    csvWriter.WriteField("AssemblyNo");
+                    csvWriter.WriteField("Assembly");
+                    csvWriter.WriteField("Designation");
+                    csvWriter.WriteField("Series");
+                    csvWriter.NextRecord();
+                    foreach (var module in modules)
+                        foreach (var detail in details)
+                            if (detail.Assembly == module.No)
+                            {
+                                csvWriter.WriteRecord(detail);
+                                csvWriter.WriteField(module.Assembly);
+                                csvWriter.WriteField(module.Series);
+                                csvWriter.WriteField(module.Designation);
+                                csvWriter.NextRecord();
+                            }
+                }
+            }
+        }
+
         public Builder (string path)
         {
             _path = path;
