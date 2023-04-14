@@ -22,7 +22,7 @@ namespace Infor.HammPdfReading
             public const string DesignationSpace = "[^А-я]+";
             public const string DesignationRussian = ".+";
 
-            public static List<string> List() => new List<string>() {
+            public static string[] ToArray() => new[] {
                 Item,
                 PartNo,
                 ValidFor,
@@ -33,7 +33,7 @@ namespace Infor.HammPdfReading
             };
         }
 
-        static List<string> ContinuousMatch(string text, List<string> regexes)
+        static string[] ContinuousMatch(string text, string[] regexes)
         {
             var value = new List<string>();
 
@@ -49,10 +49,10 @@ namespace Infor.HammPdfReading
                 textCut = textCut.Trim();
             }
 
-            return value;
+            return value.ToArray();
         }
 
-        static List<string> PageInfo(string text) => ContinuousMatch(text, new List<string>(new[]
+        static string[] PageInfo(string text) => ContinuousMatch(text, new[]
             {
                 "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}",
                 Regexes.PartNo,
@@ -61,21 +61,21 @@ namespace Infor.HammPdfReading
                 Regexes.DesignationRussian,
                 "ряд:",
                 ".*"
-            }));
+            });
 
         static string Field(string line, string regex) => Regex.Match(line, regex).Value.Trim();
 
         // Regexes.DesignationRussian почему-то не считает первую букву "С" в "СФЕРО-ЦИЛИНДРИЧЕСКОЙ" на странице 215
-        static List<string> Fields(string line) => ContinuousMatch(line, Regexes.List());
+        static string[] Fields(string line) => ContinuousMatch(line, Regexes.ToArray());
 
-        static List<string> Designations(string line) =>
-            new List<string>()
+        static string[] Designations(string line) =>
+            new[]
             {
                 Field(line, Regexes.DesignationSpace),
                 Field(line, Regexes.DesignationRussian)
             };
 
-        static List<Detail> Details(string text)
+        static Detail[] Details(string text)
         {
             var details = new List<Detail>();
 
@@ -99,10 +99,10 @@ namespace Infor.HammPdfReading
                 }
             }
 
-            return details;
+            return details.ToArray();
         }
 
-        static List<ExtendedDetail> ExtendedDetails(string text)
+        static ExtendedDetail[] ExtendedDetails(string text)
         {
             var details = new List<ExtendedDetail>();
 
@@ -121,14 +121,14 @@ namespace Infor.HammPdfReading
                     Assembly = assembly
                 });
 
-            return details;
+            return details.ToArray();
         }
 
         static bool IsTablePage(string text) => Regex.IsMatch(text, Regexes.Table);
 
         PdfReader _reader;
 
-        public List<Detail> Details(int page)
+        public Detail[] Details(int page)
         {
             var strategy = new SimpleTextExtractionStrategy();
 
@@ -138,7 +138,7 @@ namespace Infor.HammPdfReading
             return Details(match.Value);
         }
 
-        public List<ExtendedDetail> ExtendedDetails(int page)
+        public ExtendedDetail[] ExtendedDetails(int page)
         {
             var strategy = new SimpleTextExtractionStrategy();
 
@@ -147,7 +147,7 @@ namespace Infor.HammPdfReading
             return ExtendedDetails(text);
         }
 
-        public List<ExtendedDetail> ExtendedDetails(int page, int count)
+        public ExtendedDetail[] ExtendedDetails(int page, int count)
         {
             var details = new List<ExtendedDetail>();
             for (int i = 0; i < count; i++)
@@ -157,10 +157,10 @@ namespace Infor.HammPdfReading
                 if (IsTablePage(text))
                     details.AddRange(ExtendedDetails(text));
             }
-            return details;
+            return details.ToArray();
         }
 
-        public List<ExtendedDetail> ExtendedDetails() => ExtendedDetails(1, _reader.NumberOfPages);
+        public ExtendedDetail[] ExtendedDetails() => ExtendedDetails(1, _reader.NumberOfPages);
 
         public Module GetModule(string text)
         {

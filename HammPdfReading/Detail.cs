@@ -11,7 +11,7 @@
 
         public override string ToString() => $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {IDetail.UnitToString(Unit)} {Designation}";
 
-        public static Detail FromFields(List<string> fields) => new Detail()
+        public static Detail FromFields(string[] fields) => new Detail()
         {
             Item = Convert.ToDouble(fields[0].Replace('.', ',')),
             PartNo = Convert.ToInt32(fields[1]),
