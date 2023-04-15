@@ -37,14 +37,13 @@ namespace Infor.HammPdfReading
         {
             var value = new List<string>();
 
-            var textCut = text;
+            var textCut = text.Trim();
             foreach (var regex in regexes)
             {
                 var match = Regex.Match(textCut, regex);
                 var item = match.Value;
                 item = item.Trim();
                 value.Add(item);
-                textCut = textCut.Trim();
                 textCut = textCut.Remove(0, match.Index + match.Length);
                 textCut = textCut.Trim();
             }
