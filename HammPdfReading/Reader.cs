@@ -226,6 +226,11 @@ namespace Infor.HammPdfReading
             return modules.ToArray();
         }
 
+        public Module[] GetModules()
+        {
+            return GetModules(1, _reader.NumberOfPages);
+        }
+
         public Reader(PdfReader reader)
         {
             _reader = reader;
