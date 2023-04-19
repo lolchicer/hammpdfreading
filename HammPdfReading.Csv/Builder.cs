@@ -41,20 +41,41 @@ namespace Infor.HammPdfReading.Csv
             {
                 using (CsvWriter csvWriter = new CsvWriter(writer, new CultureInfo("ru-RU", false)))
                 {
-                    csvWriter.WriteHeader<Detail>();
-                    csvWriter.WriteField("AssemblyNo");
-                    csvWriter.WriteField("Assembly");
-                    csvWriter.WriteField("Designation");
-                    csvWriter.WriteField("Series");
+                    foreach (var header in new string[]
+                    {
+                        "Позиция",
+                        "№",
+                        "Действует от",
+                        "Действует до",
+                        "Количество",
+                        "Ед.",
+                        "Наименование",
+                        "Модуль",
+                        "Группа",
+                        "Конструктивный ряд",
+                        "Наименование"
+                    })
+                        csvWriter.WriteField(header);
                     csvWriter.NextRecord();
                     foreach (var module in modules)
                         foreach (var detail in details)
                             if (detail.Assembly == module.No)
                             {
-                                csvWriter.WriteRecord(detail);
-                                csvWriter.WriteField(module.Assembly);
-                                csvWriter.WriteField(module.Series);
-                                csvWriter.WriteField(module.Designation);
+                                foreach (var field in new string[]
+                                {
+                                    detail.Item.ToString(),
+                                    detail.PartNo.ToString(),
+                                    detail.ValidFor.Item1.ToString(),
+                                    detail.ValidFor.Item2.ToString(),
+                                    detail.Quantity.ToString(),
+                                    detail.Unit.ToString(),
+                                    detail.Designation,
+                                    detail.Assembly.ToString(),
+                                    module.Assembly.ToString(),
+                                    module.Series,
+                                    module.Designation,
+                                })
+                                    csvWriter.WriteField(field);
                                 csvWriter.NextRecord();
                             }
                 }

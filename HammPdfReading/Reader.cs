@@ -1,5 +1,7 @@
 ﻿using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.events;
 using iTextSharp.text.pdf.parser;
+using System;
 using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -22,7 +24,12 @@ namespace Infor.HammPdfReading
             public const string DesignationSpace = "[^А-я]+";
             public const string DesignationRussian = ".+";
 
-            public static string[] ToArray() => new[] {
+            public const string Assembly = "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}";
+            public const string Date = "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}";
+            public const string PageInfo5 = "ряд:";
+            public const string Series = ".*";
+
+            public static string[] TableLineToArray() => new[] {
                 Item,
                 PartNo,
                 ValidFor,
@@ -30,6 +37,32 @@ namespace Infor.HammPdfReading
                 Unit,
                 DesignationSpace,
                 DesignationRussian
+            };
+
+            public static string[] MainToArray() => new[]
+            {
+                Item,
+                PartNo,
+                ValidFor,
+                Quantity,
+                Unit
+            };
+
+            public static string[] DesignationsToArray() => new[]
+            {
+                DesignationRussian,
+                DesignationSpace
+            };
+
+            public static string[] PageInfoToArray() => new[]
+            {
+                Assembly,
+                PartNo,
+                Date,
+                DesignationSpace,
+                DesignationRussian,
+                PageInfo5,
+                Series
             };
         }
 
@@ -51,50 +84,49 @@ namespace Infor.HammPdfReading
             return value.ToArray();
         }
 
-        static string[] PageInfo(string text) => ContinuousMatch(text, new[]
-            {
-                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}",
-                Regexes.PartNo,
-                "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}",
-                Regexes.DesignationSpace,
-                Regexes.DesignationRussian,
-                "ряд:",
-                ".*"
-            });
-
-        static string Field(string line, string regex) => Regex.Match(line, regex).Value.Trim();
-
-        // Regexes.DesignationRussian почему-то не считает первую букву "С" в "СФЕРО-ЦИЛИНДРИЧЕСКОЙ" на странице 215
-        static string[] Fields(string line) => ContinuousMatch(line, Regexes.ToArray());
-
-        static string[] Designations(string line) =>
-            new[]
-            {
-                Field(line, Regexes.DesignationSpace),
-                Field(line, Regexes.DesignationRussian)
-            };
-
         static Detail[] Details(string text)
         {
             var details = new List<Detail>();
 
-            text = Regex.Match(text, Regexes.Table).Value;
+            var textCut = Regex.Match(text, Regexes.Table).Value.Trim();
 
-            foreach (var line in text.Split('\n'))
+            foreach (var line in textCut.Split('\n'))
             {
-                var row = Fields(line);
-                if (row[1] != string.Empty)
-                {
+                var row = ContinuousMatch(line, Regexes.TableLineToArray());
+                if (!row.Contains(string.Empty))
                     details.Add(Detail.FromFields(row));
-                }
                 else
                 {
-                    var i = details.Count - 1;
-                    var replacing = details[i];
-                    replacing.Designation += ' ' + row[6];
-                    replacing.Designation = replacing.Designation.Trim();
-                    details.RemoveAt(i);
-                    details.Add(replacing);
+                    row = ContinuousMatch(line, Regexes.MainToArray());
+                    if (!row.Contains(string.Empty))
+                    {
+                        var extendedRow = new string[row.Length + 2];
+                        row.CopyTo(extendedRow, 0);
+                        new[] { string.Empty, string.Empty }.CopyTo(extendedRow, 5);
+                        details.Add(Detail.FromFields(extendedRow));
+                    }
+                    else
+                    {
+                        row = ContinuousMatch(line, Regexes.DesignationsToArray());
+                        if (row[0] != Regex.Match(line, Regexes.DesignationSpace).Value)
+                        {
+                            var i = details.Count - 1;
+                            var replacing = details[i];
+                            replacing.Designation += ' ' + row[0];
+                            replacing.Designation = replacing.Designation.Trim();
+                            details.RemoveAt(i);
+                            details.Add(replacing);
+                        }
+                        if (!row.Contains(string.Empty))
+                        {
+                            var i = details.Count - 1;
+                            var replacing = details[i];
+                            replacing.Designation += ' ' + row[1];
+                            replacing.Designation = replacing.Designation.Trim();
+                            details.RemoveAt(i);
+                            details.Add(replacing);
+                        }
+                    }
                 }
             }
 
@@ -105,7 +137,9 @@ namespace Infor.HammPdfReading
         {
             var details = new List<ExtendedDetail>();
 
-            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
+            var pageInfo = ContinuousMatch(
+                Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value,
+                Regexes.PageInfoToArray());
             var assembly = Convert.ToInt32(pageInfo[1]);
 
             foreach (var detail in Details(text))
@@ -163,7 +197,9 @@ namespace Infor.HammPdfReading
 
         public Module GetModule(string text)
         {
-            var pageInfo = PageInfo(Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value);
+            var pageInfo = ContinuousMatch(
+                Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value,
+                Regexes.PageInfoToArray());
 
             return new Module() { No = Convert.ToInt32(pageInfo[1]), Assembly = pageInfo[0], Series = pageInfo[4], Designation = pageInfo[6] };
         }

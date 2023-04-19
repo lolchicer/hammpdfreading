@@ -5,8 +5,8 @@ using Infor.HammPdfReading.Csv;
 
 Console.WriteLine("путь к документу:");
 var reader = new Reader(new PdfReader(Console.ReadLine()));
-var details = reader.ExtendedDetails(45, 10);
-var modules = reader.GetModules(45, 10);
+var details = reader.ExtendedDetails(43, 10);
+var modules = reader.GetModules(43, 10);
 
 Console.WriteLine("путь к базе:");
 var path = Console.ReadLine();
