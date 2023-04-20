@@ -201,7 +201,7 @@ namespace Infor.HammPdfReading
                 Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value,
                 Regexes.PageInfoToArray());
 
-            return new Module() { No = Convert.ToInt32(pageInfo[1]), Assembly = pageInfo[0], Series = pageInfo[4], Designation = pageInfo[6] };
+            return new Module() { No = Convert.ToInt32(pageInfo[1]), Assembly = pageInfo[0], Series = pageInfo[6], Designation = pageInfo[4] };
         }
 
         public Module GetModule(int page)
