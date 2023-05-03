@@ -2,9 +2,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using Infor.HammPdfReading;
-using Infor.HammPdfReading.Sqlite;
+using Infor.HammPdfReading.Csv;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
+using System.Windows.Forms;
 
 namespace Test05
 {
@@ -18,22 +19,35 @@ namespace Test05
         int? _page;
         int? _count;
 
+        public string DbPath { get { return _dbPath; } }
+
         public DatabaseSettingsWindow()
         {
             InitializeComponent();
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        bool BuildButtonIsEnabled() => !(PathBox.Text == string.Empty || NameBox.Text == string.Empty);
+
+        private void TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_textBox.Text == string.Empty)
-                _buildButton.IsEnabled = false;
-            else
-                _buildButton.IsEnabled = true;
+            _buildButton.IsEnabled = BuildButtonIsEnabled();
         }
 
         private void BuildButton_Click(object sender, RoutedEventArgs e)
         {
-            new Builder(_dbPath).Build();
+            _dbPath = PathBox.Text + '\\' + NameBox.Text;
+
+            new Builder(PathBox.Text + '\\' + NameBox.Text).Build();
+
+            DialogResult = true;
+        }
+
+        private void PathOpen_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+
+            if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                PathBox.Text = folderBrowserDialog.SelectedPath;
         }
     }
 }

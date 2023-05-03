@@ -15,13 +15,17 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBox x:Name="_textBox" TextChanged="TextBox_TextChanged"></TextBox>
-            <TextBlock Grid.Column="1" Text="Имя"></TextBlock>
+            <TextBox x:Name="NameBox" TextChanged="TextChanged"></TextBox>
+            <TextBlock Grid.Column="2" Text="Имя"></TextBlock>
+            <TextBox Grid.Row="1" x:Name="PathBox" TextChanged="TextChanged"></TextBox>
+            <Button Grid.Row="1" Grid.Column="1" Name="PathOpen" Content="..." Click="PathOpen_Click"></Button>
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="Путь"></TextBlock>
         </Grid>
         <Button x:Name="_buildButton" Grid.Column="1" Content="Создать" Click="BuildButton_Click" IsEnabled="False"></Button>
     </Grid>

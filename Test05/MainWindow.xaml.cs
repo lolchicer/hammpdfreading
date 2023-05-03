@@ -40,9 +40,11 @@ namespace Test05
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (new DatabaseSettingsWindow().ShowDialog() == true)
-            {
+            DatabaseSettingsWindow window = new DatabaseSettingsWindow();
 
+            if (window.ShowDialog() == true)
+            {
+                new DatabaseWindow(window.DbPath).Show();
             }
         }
     }

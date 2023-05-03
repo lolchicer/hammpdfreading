@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HammPdfReading.Sqlite\HammPdfReading.Sqlite.csproj" />
+    <PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HammPdfReading.Csv\HammPdfReading.Csv.csproj" />
     <ProjectReference Include="..\HammPdfReading\HammPdfReading.csproj" />
   </ItemGroup>
 

@@ -25,8 +25,8 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="PageIndexBox" PreviewTextInput="Numeric" TextChanged="PageIndexBox_TextChanged"></TextBox>
-                <TextBox x:Name="PageCountBox" PreviewTextInput="Numeric" Grid.Column="1" TextChanged="PageCountBox_TextChanged"></TextBox>
+                <TextBox Text="0" x:Name="PageIndexBox" TextChanged="PageIndexBox_TextChanged"></TextBox>
+                <TextBox Text="0" x:Name="PageCountBox" Grid.Column="1" TextChanged="PageCountBox_TextChanged"></TextBox>
             </Grid>
             <TextBlock Grid.Column="1">Страницы</TextBlock>
             <Grid Grid.Row="1">

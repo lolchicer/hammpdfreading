@@ -13,8 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using Infor.HammPdfReading;
-using Infor.HammPdfReading.Sqlite;
+using Infor.HammPdfReading.Csv;
 using iTextSharp.text.pdf;
+using System.Reflection;
 
 namespace Test05
 {
@@ -32,14 +33,43 @@ namespace Test05
             InitializeComponent();
         }
 
+        int _index = 0;
+        int _count = 0;
+
         private void PageIndexBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            int index;
+
+            bool isRight = true;
+
+            if (int.TryParse(((TextBox)sender).Text, out index))
+                if (index > 0)
+                    _index = index;
+                else
+                    isRight = false;
+            else
+                isRight = false;
+
+            if (!isRight)
+                ((TextBox)sender).Text = _index.ToString();
         }
 
         private void PageCountBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            int count;
 
+            bool isRight = true;
+
+            if (int.TryParse(((TextBox)sender).Text, out count))
+                if (count > 0)
+                    _count = count;
+                else
+                    isRight = false;
+            else
+                isRight = false;
+
+            if (isRight)
+                ((TextBox)sender).Text = _count.ToString();
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -55,19 +85,14 @@ namespace Test05
             
         }
 
-        private void Numeric(object sender, TextCompositionEventArgs e)
-        {
-            int апрвпавеквпситма;
-
-            if (!int.TryParse(e.Text, out апрвпавеквпситма))
-                e.Handled = false;
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var reader = new Reader(new PdfReader(PathBox.Text));
 
-            _builder.Insert(reader.ExtendedDetails(Convert.ToInt32(PageIndexBox.Text), Convert.ToInt32(PageCountBox.Text)).ToArray());
+            var page = Convert.ToInt32(PageIndexBox.Text);
+            var count = Convert.ToInt32(PageCountBox.Text);
+
+            _builder.Join(reader.ExtendedDetails(page, count).ToArray(), reader.GetModules(page, count));
         }
     }
 }
