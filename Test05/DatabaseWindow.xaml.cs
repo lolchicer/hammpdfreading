@@ -17,7 +17,7 @@ using Infor.HammPdfReading.Csv;
 using iTextSharp.text.pdf;
 using System.Reflection;
 
-namespace Test05
+namespace HammPdfReading.Gui
 {
     /// <summary>
     /// Логика взаимодействия для DatabaseWindow.xaml

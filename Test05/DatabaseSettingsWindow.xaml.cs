@@ -7,7 +7,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using System.Windows.Forms;
 
-namespace Test05
+namespace HammPdfReading.Gui
 {
     /// <summary>
     /// Логика взаимодействия для DatabaseSettingsWindow.xaml

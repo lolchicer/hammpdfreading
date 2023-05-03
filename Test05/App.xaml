@@ -1,7 +1,7 @@
-﻿<Application x:Class="Test05.App"
+﻿<Application x:Class="HammPdfReading.Gui.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Test05"
+             xmlns:local="clr-namespace:HammPdfReading.Gui"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
