@@ -21,11 +21,12 @@ namespace Infor.HammPdfReading
             public const string ValidFor = "[0-9]{1,4}-[0-9]{1,4}";
             public const string Quantity = "[0-9]+";
             public const string Unit = "[A-Z]{1,2}";
-            public const string DesignationSpace = "[^А-я]+";
+            public const string DesignationSpace = "[^А-я]*";
             public const string DesignationRussian = ".+";
 
             public const string Assembly = "[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}";
             public const string Date = "[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}";
+            public const string AssemblyDesignations = "(.|\n)*(?=Benennung:)";
             public const string PageInfo5 = "ряд:";
             public const string Series = ".*";
 
@@ -50,8 +51,8 @@ namespace Infor.HammPdfReading
 
             public static string[] DesignationsToArray() => new[]
             {
-                DesignationRussian,
-                DesignationSpace
+                DesignationSpace,
+                DesignationRussian
             };
 
             public static string[] PageInfoToArray() => new[]
@@ -59,8 +60,7 @@ namespace Infor.HammPdfReading
                 Assembly,
                 PartNo,
                 Date,
-                DesignationSpace,
-                DesignationRussian,
+                AssemblyDesignations,
                 PageInfo5,
                 Series
             };
@@ -84,48 +84,106 @@ namespace Infor.HammPdfReading
             return value.ToArray();
         }
 
+        static string DesignationRussian(string text)
+        {
+            var designations = ContinuousMatch(text, Regexes.DesignationsToArray());
+            if (designations[1] == string.Empty)
+            {
+                // гигантское количество функций, разворачивающих строку
+                var reversed = text.ToCharArray();
+                Array.Reverse(reversed);
+                var reversedMatched = Regex.Match(new string(reversed), "((.|\\n)*)(.|\\n)*\\1");
+                var matched = reversedMatched.Groups[0].Value.ToCharArray();
+                Array.Reverse(matched);
+                return new string(matched) ?? string.Empty;
+            }
+            else
+                return designations[1];
+        }
+
+        static string DesignationRussian(string[] lines)
+        {
+            var text = string.Join(" ", lines);
+            return DesignationRussian(text.Trim());
+        }
+
+        static string DesignationRussianLines(string text)
+        {
+            var lines = text.Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+                lines[i] = lines[i].Trim();
+            return DesignationRussian(string.Concat(lines));
+        }
+
+        static string DesignationRussianLines(string[] lines)
+        {
+            for (int i = 0; i < lines.Length; i++)
+                lines[i] = lines[i].Trim();
+            return DesignationRussian(string.Concat(lines));
+        }
+
+        enum RowType
+        {
+            full,
+            main,
+            designation
+        }
+
         static Detail[] Details(string text)
         {
             var details = new List<Detail>();
 
             var textCut = Regex.Match(text, Regexes.Table).Value.Trim();
+            var isFinished = true;
+
+            RowType rowType;
+
+            var designations = new List<string>();
 
             foreach (var line in textCut.Split('\n'))
             {
                 var row = ContinuousMatch(line, Regexes.TableLineToArray());
                 if (!row.Contains(string.Empty))
-                    details.Add(Detail.FromFields(row));
+                    rowType = RowType.full;
                 else
                 {
                     row = ContinuousMatch(line, Regexes.MainToArray());
                     if (!row.Contains(string.Empty))
+                        rowType = RowType.main;
+                    else
                     {
+                        row = ContinuousMatch(line, Regexes.DesignationsToArray());
+                        rowType = RowType.designation;
+                    }
+                }
+
+                if (rowType == RowType.designation)
+                    designations.Add(line);
+                else
+                {
+                    if (!isFinished)
+                    {
+                        var i = details.Count - 1;
+                        var replacing = details[i];
+                        replacing.Designation += DesignationRussian(designations.ToArray());
+                        replacing.Designation = replacing.Designation.Trim();
+                        details.RemoveAt(i);
+                        details.Add(replacing);
+
+                        isFinished = true;
+                    }
+
+                    if (rowType == RowType.full)
+                        details.Add(Detail.FromFields(row));
+                    if (rowType == RowType.main)
+                    {
+                        row = ContinuousMatch(line, Regexes.MainToArray());
                         var extendedRow = new string[row.Length + 2];
                         row.CopyTo(extendedRow, 0);
                         new[] { string.Empty, string.Empty }.CopyTo(extendedRow, 5);
                         details.Add(Detail.FromFields(extendedRow));
-                    }
-                    else
-                    {
-                        row = ContinuousMatch(line, Regexes.DesignationsToArray());
-                        if (row[0] != Regex.Match(line, Regexes.DesignationSpace).Value)
-                        {
-                            var i = details.Count - 1;
-                            var replacing = details[i];
-                            replacing.Designation += ' ' + row[0];
-                            replacing.Designation = replacing.Designation.Trim();
-                            details.RemoveAt(i);
-                            details.Add(replacing);
-                        }
-                        if (!row.Contains(string.Empty))
-                        {
-                            var i = details.Count - 1;
-                            var replacing = details[i];
-                            replacing.Designation += ' ' + row[1];
-                            replacing.Designation = replacing.Designation.Trim();
-                            details.RemoveAt(i);
-                            details.Add(replacing);
-                        }
+
+                        isFinished = false;
                     }
                 }
             }
@@ -201,7 +259,7 @@ namespace Infor.HammPdfReading
                 Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value,
                 Regexes.PageInfoToArray());
 
-            return new Module() { No = Convert.ToInt32(pageInfo[1]), Assembly = pageInfo[0], Series = pageInfo[6], Designation = pageInfo[4] };
+            return new Module() { No = Convert.ToInt32(pageInfo[1]), Assembly = pageInfo[0], Series = pageInfo[5], Designation = DesignationRussianLines(pageInfo[3]) };
         }
 
         public Module GetModule(int page)
