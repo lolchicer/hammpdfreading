@@ -92,7 +92,7 @@ namespace HammPdfReading.Gui
             InsertButton.IsEnabled = InsertButtonIsEnabled();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void InsertButton_Click(object sender, RoutedEventArgs e)
         {
             var reader = new Reader(new PdfReader(PathBox.Text));
 

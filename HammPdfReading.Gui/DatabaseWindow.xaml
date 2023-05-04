@@ -39,6 +39,6 @@
             </Grid>
             <TextBlock Grid.Column="1" Grid.Row="1">PDF-файл</TextBlock>
         </Grid>
-        <Button x:Name="InsertButton" Grid.Column="1" Content="Добавить детали" Click="Button_Click" IsEnabled="False"></Button>
+        <Button x:Name="InsertButton" Grid.Column="1" Content="Добавить детали" Click="InsertButton_Click" IsEnabled="False"></Button>
     </Grid>
 </Window>
