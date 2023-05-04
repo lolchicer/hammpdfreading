@@ -34,7 +34,7 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="OpenButton" Click="OpenButton_Click" Content="Обзор..."></Button>
+                <Button x:Name="PathButton" Click="PathButton_Click" Content="Обзор..."></Button>
                 <TextBox x:Name="PathBox" Grid.Column="1" TextChanged="PathBox_TextChanged"></TextBox>
             </Grid>
             <TextBlock Grid.Column="1" Grid.Row="1">PDF-файл</TextBlock>

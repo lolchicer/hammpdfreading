@@ -73,7 +73,7 @@ namespace HammPdfReading.Gui
                 ((TextBox)sender).Text = _count.ToString();
         }
 
-        private void OpenButton_Click(object sender, RoutedEventArgs e)
+        private void PathButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
