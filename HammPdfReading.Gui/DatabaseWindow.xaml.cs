@@ -16,6 +16,7 @@ using Infor.HammPdfReading;
 using Infor.HammPdfReading.Csv;
 using iTextSharp.text.pdf;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace HammPdfReading.Gui
 {
@@ -33,8 +34,8 @@ namespace HammPdfReading.Gui
             InitializeComponent();
         }
 
-        int _index = 0;
-        int _count = 0;
+        int _index = 1;
+        int _count = 1;
 
         private void PageIndexBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -68,7 +69,7 @@ namespace HammPdfReading.Gui
             else
                 isRight = false;
 
-            if (isRight)
+            if (!isRight)
                 ((TextBox)sender).Text = _count.ToString();
         }
 
@@ -80,9 +81,11 @@ namespace HammPdfReading.Gui
                 PathBox.Text = openFileDialog.FileName;
         }
 
+        bool InsertButtonIsEnabled() => (from driveInfo in System.IO.DriveInfo.GetDrives() select Regex.Match(PathBox.Text, $"(?<=){driveInfo.Name}\\").Success).Contains(true);
+
         private void PathBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            InsertButton.IsEnabled = InsertButtonIsEnabled();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
