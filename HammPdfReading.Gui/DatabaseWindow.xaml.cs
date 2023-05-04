@@ -81,7 +81,11 @@ namespace HammPdfReading.Gui
                 PathBox.Text = openFileDialog.FileName;
         }
 
-        bool InsertButtonIsEnabled() => (from driveInfo in System.IO.DriveInfo.GetDrives() select Regex.Match(PathBox.Text, $"(?<=){driveInfo.Name}\\").Success).Contains(true);
+        bool InsertButtonIsEnabled() => 
+            (from driveInfo
+             in System.IO.DriveInfo.GetDrives()
+             select Regex.Match(PathBox.Text, $"(?<=){driveInfo.Name}\\").Success)
+            .Contains(true);
 
         private void PathBox_TextChanged(object sender, TextChangedEventArgs e)
         {
