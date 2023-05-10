@@ -6,6 +6,8 @@ using Infor.HammPdfReading.Csv;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using System.Windows.Forms;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace HammPdfReading.Gui
 {
@@ -26,7 +28,12 @@ namespace HammPdfReading.Gui
             InitializeComponent();
         }
 
-        bool BuildButtonIsEnabled() => !(PathBox.Text == string.Empty || NameBox.Text == string.Empty);
+        bool BuildButtonIsEnabled() => 
+            PathBox.Text != string.Empty &&
+            (from driveInfo
+             in System.IO.DriveInfo.GetDrives()
+             select Regex.Match(PathBox.Text, $"(?<=){driveInfo.Name}\\").Success)
+            .Contains(true);
 
         private void TextChanged(object sender, TextChangedEventArgs e)
         {

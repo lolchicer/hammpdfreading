@@ -21,12 +21,29 @@ namespace HammPdfReading.Gui
     /// </summary>
     public partial class MainWindow : Window
     {
+        void OpenHome()
+        {
+            DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new MainPage(this) }, Header = "Домашняя вкладка" });
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            OpenHome();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void NewDatabase()
+        {
+            DatabaseSettingsWindow window = new DatabaseSettingsWindow();
+
+            if (window.ShowDialog() == true)
+            {
+                DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new DatabaseBuilderPage(window.DbPath) }, Header = window.DbPath });
+            }
+        }
+
+        public void OpenDatabase()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -34,18 +51,14 @@ namespace HammPdfReading.Gui
             {
                 var path = openFileDialog.FileName;
 
-                new DatabaseWindow(path).Show();
+                DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new DatabaseBuilderPage(path) }, Header = path });
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            DatabaseSettingsWindow window = new DatabaseSettingsWindow();
+        private void FileNew_Click(object sender, RoutedEventArgs e) => NewDatabase();
 
-            if (window.ShowDialog() == true)
-            {
-                new DatabaseWindow(window.DbPath).Show();
-            }
-        }
+        private void FileOpen_Click(object sender, RoutedEventArgs e) => OpenDatabase();
+
+        private void ViewHome_Click(object sender, RoutedEventArgs e) => OpenHome();
     }
 }

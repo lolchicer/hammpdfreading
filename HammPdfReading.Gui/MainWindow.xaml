@@ -7,14 +7,17 @@
         mc:Ignorable="d"
         Title="HammPdfReader" Height="450" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <Button Grid.Column="0" Content="Создать базу данных" Click="Button_Click_1"></Button>
-        <Button Grid.Column="1" Content="Открыть базу данных" Click="Button_Click"></Button>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Создать..." Click="FileNew_Click"></MenuItem>
+                    <MenuItem Header="Открыть..." Click="FileOpen_Click"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Вид">
+                    <MenuItem Header="Домашняя вкладка" Click="ViewHome_Click"></MenuItem>
+                </MenuItem>
+            </Menu>
+            <TabControl x:Name="DatabaseTabControl"></TabControl>
+        </DockPanel>
     </Grid>
 </Window>
