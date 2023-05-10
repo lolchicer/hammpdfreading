@@ -23,7 +23,7 @@ namespace HammPdfReading.Gui
     {
         void OpenHome()
         {
-            DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new MainPage(this) }, Header = "Домашняя вкладка" });
+            DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new MainPage(this) }, Header = new CloseableTabItemHeader(DatabaseTabControl, "Домашняя вкладка") });
         }
 
         public MainWindow()
@@ -39,7 +39,7 @@ namespace HammPdfReading.Gui
 
             if (window.ShowDialog() == true)
             {
-                DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new DatabaseBuilderPage(window.DbPath) }, Header = window.DbPath });
+                DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new DatabaseBuilderPage(window.DbPath) }, Header = new CloseableTabItemHeader(DatabaseTabControl, window.DbPath) });
             }
         }
 
@@ -51,7 +51,7 @@ namespace HammPdfReading.Gui
             {
                 var path = openFileDialog.FileName;
 
-                DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new DatabaseBuilderPage(path) }, Header = path });
+                DatabaseTabControl.Items.Add(new TabItem { Content = new Frame() { Content = new DatabaseBuilderPage(path) }, Header = new CloseableTabItemHeader(DatabaseTabControl, path) });
             }
         }
 

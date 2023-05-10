@@ -42,7 +42,7 @@ namespace HammPdfReading.Gui
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             if (openFileDialog.ShowDialog() == true)
-                PdfTabControl.Items.Add(new TabItem() { Content = new Frame() { Content = new PdfPage(openFileDialog.FileName, _builder) }, Header = openFileDialog.FileName });
+                PdfTabControl.Items.Add(new TabItem() { Content = new Frame() { Content = new PdfPage(openFileDialog.FileName, _builder) }, Header = new CloseableTabItemHeader(PdfTabControl, openFileDialog.FileName) });
         }
     }
 }
