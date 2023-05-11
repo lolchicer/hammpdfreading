@@ -81,7 +81,7 @@ namespace HammPdfReading.Gui
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
-            openFileDialog.Filter = "CSV (*.csv)|*.csv|Excel (*.xlsx)|.xlsx|Все файлы (*.*)|*.*";
+            openFileDialog.Filter = "CSV (*.csv)|*.csv|Все файлы (*.*)|*.*";
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 DatabasePathBox.Text = openFileDialog.FileName;
