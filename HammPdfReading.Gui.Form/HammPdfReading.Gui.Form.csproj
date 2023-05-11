@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HammPdfReading.Csv\HammPdfReading.Csv.csproj" />
+    <ProjectReference Include="..\HammPdfReading\HammPdfReading.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FormPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WriteIndicator.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

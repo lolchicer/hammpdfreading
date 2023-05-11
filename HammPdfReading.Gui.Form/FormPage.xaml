@@ -1,0 +1,36 @@
+﻿<Page x:Class="HammPdfReading.Gui.FormPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:HammPdfReading.Gui"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="400"
+      Title="FormPage">
+
+    <Grid>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="DatabasePathBox" Grid.Row="0" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
+                <Button Grid.Row="0" Grid.Column="1" Click="DatabasePathButton_Click">...</Button>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="CSV-файл"></TextBlock>
+                <TextBox x:Name="PdfPathBox" Grid.Row="1" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
+                <Button Grid.Row="1" Grid.Column="1" Click="PdfPathButton_Click">...</Button>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="Папка с PDF-файлами"></TextBlock>
+            </Grid>
+                <Button x:Name="ConfirmButton" Click="ConfirmButton_Click" IsEnabled="false">Записать</Button>
+            </StackPanel>
+            <ListView x:Name="PdfList" DockPanel.Dock="Bottom"></ListView>
+        </DockPanel>
+    </Grid>
+</Page>
