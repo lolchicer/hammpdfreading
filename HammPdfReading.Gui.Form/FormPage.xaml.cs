@@ -41,7 +41,7 @@ namespace HammPdfReading.Gui
              select Regex.Match(PdfPathBox.Text, $"(?<=){driveInfo.Name}\\").Success)
             .Contains(true);
 
-        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             PdfList.Items.Clear();
 
@@ -67,9 +67,10 @@ namespace HammPdfReading.Gui
                         PdfList.Items.Add(indicator);
 
                         var reader = new Reader(new PdfReader(pdfPath));
+                        await Task.Run(() =>
                         builder.Join(
                             reader.ExtendedDetails(),
-                            reader.GetModules());
+                            reader.GetModules()));
 
                         indicator.IsDone = true;
                     }
