@@ -51,7 +51,7 @@ namespace HammPdfReading.Gui
 
                 if (pdfFolderExists)
                 {
-                    var builder = new Builder(DatabasePathBox.Text);
+                    var builder = new HammPdfWriter(DatabasePathBox.Text);
 
                     var databaseExists = new FileInfo(DatabasePathBox.Text).Exists;
 

@@ -44,7 +44,7 @@ namespace HammPdfReading.Gui
         {
             _dbPath = PathBox.Text + '\\' + NameBox.Text;
 
-            new Builder(PathBox.Text + '\\' + NameBox.Text).Build();
+            new HammPdfWriter(PathBox.Text + '\\' + NameBox.Text).Build();
 
             DialogResult = true;
         }

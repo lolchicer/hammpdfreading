@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Infor.HammPdfReading.Csv
 {
-    public class Builder
+    public class HammPdfWriter
     {
         string _path;
 
@@ -82,7 +82,7 @@ namespace Infor.HammPdfReading.Csv
             }
         }
 
-        public Builder (string path)
+        public HammPdfWriter (string path)
         {
             _path = path;
         }

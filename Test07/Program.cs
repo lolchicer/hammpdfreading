@@ -12,6 +12,6 @@ var modules = reader.GetModule(91);
 Console.WriteLine("путь к базе:");
 var path = Console.ReadLine();
 
-var builder = new Builder(path);
+var builder = new HammPdfWriter(path);
 builder.Build();
 builder.Join(details.ToArray(), new[] { modules });

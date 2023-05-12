@@ -10,6 +10,6 @@ var details = reader.ExtendedDetails(45, 10);
 Console.WriteLine("путь к базе:");
 var path = Console.ReadLine();
 
-var builder = new Builder(path);
+var builder = new HammPdfWriter(path);
 builder.Build();
 builder.Insert(details.ToArray());

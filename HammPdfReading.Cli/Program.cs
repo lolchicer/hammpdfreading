@@ -30,7 +30,7 @@ for (int i = 0; i < args.Length; i++)
 // запись pdf-файлов
 if (pdfPath != null)
 {
-    var builder = new Builder(databasePath);
+    var builder = new HammPdfWriter(databasePath);
 
     if (!File.Exists(databasePath))
         builder.Build();

@@ -27,14 +27,14 @@ namespace HammPdfReading.Gui
         PdfReader _pdfReader;
         HammPdfReader _reader;
 
-        Builder _builder;
+        HammPdfWriter _builder;
 
         int _numberOfPages;
 
         int _index = 1;
         int _count = 1;
 
-        public PdfPage(string path, Builder builder)
+        public PdfPage(string path, HammPdfWriter builder)
         {
             _pdfReader = new PdfReader(path);
             _reader = new HammPdfReader(_pdfReader);

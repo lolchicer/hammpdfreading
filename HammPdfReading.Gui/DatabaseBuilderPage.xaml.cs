@@ -28,11 +28,11 @@ namespace HammPdfReading.Gui
     /// </summary>
     public partial class DatabaseBuilderPage : Page
     {
-        Builder _builder;
+        HammPdfWriter _builder;
 
         public DatabaseBuilderPage(string path)
         {
-            _builder = new Builder(path);
+            _builder = new HammPdfWriter(path);
 
             InitializeComponent();
         }
