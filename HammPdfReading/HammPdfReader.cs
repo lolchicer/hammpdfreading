@@ -7,7 +7,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Infor.HammPdfReading
 {
-    public class Reader
+    public class HammPdfReader
     {
         public static class Regexes
         {
@@ -289,7 +289,7 @@ namespace Infor.HammPdfReading
             return GetModules(1, _reader.NumberOfPages);
         }
 
-        public Reader(PdfReader reader)
+        public HammPdfReader(PdfReader reader)
         {
             _reader = reader;
         }

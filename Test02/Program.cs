@@ -2,4 +2,4 @@
 using Infor.HammPdfReading;
 
 var detail = Console.ReadLine();
-Console.WriteLine(Reader.Details(detail));
+Console.WriteLine(HammPdfReader.Details(detail));

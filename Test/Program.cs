@@ -6,7 +6,7 @@ using Infor.HammPdfReading;
 Console.WriteLine("путь к файлу:");
 var path = Console.ReadLine();
 
-var reader = new Reader(new PdfReader(path));
+var reader = new HammPdfReader(new PdfReader(path));
 var details = reader.Details(37);
 
 Console.WriteLine("поле:");

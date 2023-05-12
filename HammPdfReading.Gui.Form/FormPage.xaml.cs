@@ -66,7 +66,7 @@ namespace HammPdfReading.Gui
 
                         PdfList.Items.Add(indicator);
 
-                        var reader = new Reader(new PdfReader(pdfPath));
+                        var reader = new HammPdfReader(new PdfReader(pdfPath));
                         await Task.Run(() =>
                         builder.Join(
                             reader.ExtendedDetails(),

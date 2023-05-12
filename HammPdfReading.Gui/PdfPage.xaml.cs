@@ -25,7 +25,7 @@ namespace HammPdfReading.Gui
     public partial class PdfPage : Page
     {
         PdfReader _pdfReader;
-        Reader _reader;
+        HammPdfReader _reader;
 
         Builder _builder;
 
@@ -37,7 +37,7 @@ namespace HammPdfReading.Gui
         public PdfPage(string path, Builder builder)
         {
             _pdfReader = new PdfReader(path);
-            _reader = new Reader(_pdfReader);
+            _reader = new HammPdfReader(_pdfReader);
 
             _numberOfPages = _pdfReader.NumberOfPages;
 

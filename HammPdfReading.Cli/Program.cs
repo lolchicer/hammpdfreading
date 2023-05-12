@@ -38,7 +38,7 @@ if (pdfPath != null)
     foreach (var file in Directory.GetFiles(pdfPath))
     {
         var pdfReader = new PdfReader(file);
-        var reader = new Reader(pdfReader);
+        var reader = new HammPdfReader(pdfReader);
 
         await Task.Run(() => builder.Join(reader.ExtendedDetails(), reader.GetModules()));
         Console.WriteLine($"Содержимое {file} выведено в {databasePath}.\n");
