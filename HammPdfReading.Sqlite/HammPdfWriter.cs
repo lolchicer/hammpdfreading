@@ -2,7 +2,7 @@
 
 namespace Infor.HammPdfReading.Sqlite
 {
-    public class Builder
+    public class HammPdfWriter
     {
         static string BuildQuery() =>
             "CREATE TABLE details (" +
@@ -60,7 +60,7 @@ namespace Infor.HammPdfReading.Sqlite
 
         public void Insert(ExtendedDetail[] details) => QuerySend(InsertQuery(details));
 
-        public Builder(string path)
+        public HammPdfWriter(string path)
         {
             _connection = new SqliteConnection($"DataSource={path}");
         }
