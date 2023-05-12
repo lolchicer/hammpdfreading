@@ -1,7 +1,6 @@
 ﻿using iTextSharp.text.pdf;
 using Infor.HammPdfReading;
 using Infor.HammPdfReading.Csv;
-using System.IO;
 
 // вывод
 var output = string.Empty;
