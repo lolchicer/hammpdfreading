@@ -28,7 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading.Gui", "HammPdfReading.Gui\HammPdfReading.Gui.csproj", "{130C3DFC-6318-4118-893B-F22179C13C6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HammPdfReading.Gui.Form", "HammPdfReading.Gui.Form\HammPdfReading.Gui.Form.csproj", "{288F094C-6F88-47DA-86C6-C4E65E295ADA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading.Gui.Form", "HammPdfReading.Gui.Form\HammPdfReading.Gui.Form.csproj", "{288F094C-6F88-47DA-86C6-C4E65E295ADA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HammPdfReading.Cli", "HammPdfReading.Cli\HammPdfReading.Cli.csproj", "{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +82,10 @@ Global
 		{288F094C-6F88-47DA-86C6-C4E65E295ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{288F094C-6F88-47DA-86C6-C4E65E295ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{288F094C-6F88-47DA-86C6-C4E65E295ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
