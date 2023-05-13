@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using iTextSharp.text.pdf.parser;
 
-namespace HammPdfReading.Gui
+namespace Infor.HammPdfReading.Gui
 {
     /// <summary>
     /// Логика взаимодействия для DatabaseBuilderPage.xaml

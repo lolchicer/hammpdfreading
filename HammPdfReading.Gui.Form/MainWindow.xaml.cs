@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HammPdfReading.Gui.Form
+namespace Infor.HammPdfReading.Gui.Form
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

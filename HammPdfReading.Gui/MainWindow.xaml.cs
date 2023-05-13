@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 
-namespace HammPdfReading.Gui
+namespace Infor.HammPdfReading.Gui
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

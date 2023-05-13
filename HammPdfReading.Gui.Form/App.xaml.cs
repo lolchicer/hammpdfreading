@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace HammPdfReading.Gui.Form
+namespace Infor.HammPdfReading.Gui.Form
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33417.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading", "HammPdfReading\HammPdfReading.csproj", "{7CC7E18B-AAE8-455C-9EB2-129A767740B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading", "HammPdfReading\Infor.HammPdfReading.csproj", "{7CC7E18B-AAE8-455C-9EB2-129A767740B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{DA268BE0-AB41-4555-876F-114C53DDEAC9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test02", "Test02\Test02.csproj", "{6877E2C2-0671-44D8-BE85-956B3A5CE40E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading.Sqlite", "HammPdfReading.Sqlite\HammPdfReading.Sqlite.csproj", "{83744277-0113-4B99-9D34-E2A9B84E8612}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Sqlite", "HammPdfReading.Sqlite\Infor.HammPdfReading.Sqlite.csproj", "{83744277-0113-4B99-9D34-E2A9B84E8612}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test03", "Test03\Test03.csproj", "{12EBDCFE-E465-4B2B-BF62-B534D1E64BCD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test04", "Test04\Test04.csproj", "{8FE8476F-1E92-40DF-8A25-152D5C4B9934}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading.Csv", "HammPdfReading.Csv\HammPdfReading.Csv.csproj", "{4E05A87D-6C14-4A50-AFA3-2EC20C83DCDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Csv", "HammPdfReading.Csv\Infor.HammPdfReading.Csv.csproj", "{4E05A87D-6C14-4A50-AFA3-2EC20C83DCDF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test06", "Test06\Test06.csproj", "{C8FF7489-2F64-42BD-AE03-D1D49E4E0D6B}"
 EndProject
@@ -23,14 +23,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test07", "Test07\Test07.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{893878F4-C016-44C9-B7E8-8C240B400218}"
 	ProjectSection(SolutionItems) = preProject
+		lidl jira.txt = lidl jira.txt
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading.Gui", "HammPdfReading.Gui\HammPdfReading.Gui.csproj", "{130C3DFC-6318-4118-893B-F22179C13C6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Gui", "HammPdfReading.Gui\Infor.HammPdfReading.Gui.csproj", "{130C3DFC-6318-4118-893B-F22179C13C6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HammPdfReading.Gui.Form", "HammPdfReading.Gui.Form\HammPdfReading.Gui.Form.csproj", "{288F094C-6F88-47DA-86C6-C4E65E295ADA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Gui.Form", "HammPdfReading.Gui.Form\Infor.HammPdfReading.Gui.Form.csproj", "{288F094C-6F88-47DA-86C6-C4E65E295ADA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HammPdfReading.Cli", "HammPdfReading.Cli\HammPdfReading.Cli.csproj", "{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Cli", "HammPdfReading.Cli\Infor.HammPdfReading.Cli.csproj", "{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -19,7 +19,7 @@ using Infor.HammPdfReading.Csv;
 using System.IO;
 using System.Windows.Forms;
 
-namespace HammPdfReading.Gui
+namespace Infor.HammPdfReading.Gui
 {
     /// <summary>
     /// Логика взаимодействия для FormPage.xaml

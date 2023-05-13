@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HammPdfReading.Sqlite\HammPdfReading.Sqlite.csproj" />
-    <ProjectReference Include="..\HammPdfReading\HammPdfReading.csproj" />
+    <ProjectReference Include="..\HammPdfReading.Sqlite\Infor.HammPdfReading.Sqlite.csproj" />
+    <ProjectReference Include="..\HammPdfReading\Infor.HammPdfReading.csproj" />
   </ItemGroup>
 
 </Project>

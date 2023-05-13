@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HammPdfReading.Gui
+namespace InforHammPdfReading.Gui
 {
     /// <summary>
     /// Логика взаимодействия для CloseableTabItemHeader.xaml

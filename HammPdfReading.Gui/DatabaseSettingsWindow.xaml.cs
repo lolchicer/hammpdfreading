@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HammPdfReading.Gui
+namespace Infor.HammPdfReading.Gui
 {
     /// <summary>
     /// Логика взаимодействия для DatabaseSettingsWindow.xaml

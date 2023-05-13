@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HammPdfReading\HammPdfReading.csproj" />
+    <ProjectReference Include="..\HammPdfReading\Infor.HammPdfReading.csproj" />
   </ItemGroup>
 
 </Project>
