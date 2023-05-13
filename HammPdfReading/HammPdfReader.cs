@@ -140,6 +140,18 @@ namespace Infor.HammPdfReading
 
             var designations = new List<string>();
 
+            void Finish()
+            {
+                var i = details.Count - 1;
+                var replacing = details[i];
+                replacing.Designation += DesignationRussian(designations.ToArray());
+                replacing.Designation = replacing.Designation.Trim();
+                details.RemoveAt(i);
+                details.Add(replacing);
+
+                isFinished = true;
+            }
+
             foreach (var line in textCut.Split('\n'))
             {
                 var row = ContinuousMatch(line, Regexes.TableLineToArray());
@@ -157,26 +169,16 @@ namespace Infor.HammPdfReading
                     }
                 }
 
-                if (rowType == RowType.designation)
-                    designations.Add(line);
-                else
+                switch (rowType)
                 {
-                    if (!isFinished)
-                    {
-                        var i = details.Count - 1;
-                        var replacing = details[i];
-                        replacing.Designation += DesignationRussian(designations.ToArray());
-                        replacing.Designation = replacing.Designation.Trim();
-                        details.RemoveAt(i);
-                        details.Add(replacing);
+                    case RowType.full:
+                        if (!isFinished) Finish();
 
-                        isFinished = true;
-                    }
-
-                    if (rowType == RowType.full)
                         details.Add(Detail.FromFields(row));
-                    if (rowType == RowType.main)
-                    {
+                        break;
+                    case RowType.main:
+                        if (!isFinished) Finish();
+
                         row = ContinuousMatch(line, Regexes.MainToArray());
                         var extendedRow = new string[row.Length + 2];
                         row.CopyTo(extendedRow, 0);
@@ -184,7 +186,10 @@ namespace Infor.HammPdfReading
                         details.Add(Detail.FromFields(extendedRow));
 
                         isFinished = false;
-                    }
+                        break;
+                    case RowType.designation:
+                        designations.Add(line);
+                        break;
                 }
             }
 
