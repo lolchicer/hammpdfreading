@@ -51,7 +51,7 @@ namespace Infor.HammPdfReading.Gui
             var page = Convert.ToInt32(PageIndexBox.Text);
             var count = Convert.ToInt32(PageCountBox.Text);
 
-            _builder.Join(_reader.ExtendedDetails(page, count).ToArray(), _reader.GetModules(page, count));
+            _builder.Join(_reader.GetExtendedDetails(page, count).ToArray(), _reader.GetModules(page, count));
         }
 
         private void PageIndexBox_TextChanged(object sender, TextChangedEventArgs e)

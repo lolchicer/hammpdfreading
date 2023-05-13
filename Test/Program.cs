@@ -7,7 +7,7 @@ Console.WriteLine("путь к файлу:");
 var path = Console.ReadLine();
 
 var reader = new HammPdfReader(new PdfReader(path));
-var details = reader.Details(37);
+var details = reader.GetDetails(37);
 
 Console.WriteLine("поле:");
 var field = Convert.ToInt32(Console.ReadLine());

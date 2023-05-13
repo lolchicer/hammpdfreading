@@ -129,7 +129,7 @@ namespace Infor.HammPdfReading
             designation
         }
 
-        static Detail[] Details(string text)
+        static Detail[] GetDetails(string text)
         {
             var details = new List<Detail>();
 
@@ -191,7 +191,7 @@ namespace Infor.HammPdfReading
             return details.ToArray();
         }
 
-        static ExtendedDetail[] ExtendedDetails(string text)
+        static ExtendedDetail[] GetExtendedDetails(string text)
         {
             var details = new List<ExtendedDetail>();
 
@@ -200,7 +200,7 @@ namespace Infor.HammPdfReading
                 Regexes.PageInfoToArray());
             var assembly = Convert.ToInt32(pageInfo[1]);
 
-            foreach (var detail in Details(text))
+            foreach (var detail in GetDetails(text))
                 details.Add(new ExtendedDetail()
                 {
                     Item = detail.Item,
@@ -219,26 +219,26 @@ namespace Infor.HammPdfReading
 
         PdfReader _reader;
 
-        public Detail[] Details(int page)
+        public Detail[] GetDetails(int page)
         {
             var strategy = new SimpleTextExtractionStrategy();
 
             var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
             var match = Regex.Match(text, Regexes.Table);
 
-            return Details(match.Value);
+            return GetDetails(match.Value);
         }
 
-        public ExtendedDetail[] ExtendedDetails(int page)
+        public ExtendedDetail[] GetExtendedDetails(int page)
         {
             var strategy = new SimpleTextExtractionStrategy();
 
             var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
 
-            return ExtendedDetails(text);
+            return GetExtendedDetails(text);
         }
 
-        public ExtendedDetail[] ExtendedDetails(int page, int count)
+        public ExtendedDetail[] GetExtendedDetails(int page, int count)
         {
             var details = new List<ExtendedDetail>();
             for (int i = 0; i < count; i++)
@@ -246,12 +246,12 @@ namespace Infor.HammPdfReading
                 var strategy = new SimpleTextExtractionStrategy();
                 var text = PdfTextExtractor.GetTextFromPage(_reader, page + i, strategy);
                 if (IsTablePage(text))
-                    details.AddRange(ExtendedDetails(text));
+                    details.AddRange(GetExtendedDetails(text));
             }
             return details.ToArray();
         }
 
-        public ExtendedDetail[] ExtendedDetails() => ExtendedDetails(1, _reader.NumberOfPages);
+        public ExtendedDetail[] GetExtendedDetails() => GetExtendedDetails(1, _reader.NumberOfPages);
 
         public Module GetModule(string text)
         {

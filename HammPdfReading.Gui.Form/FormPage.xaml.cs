@@ -69,7 +69,7 @@ namespace Infor.HammPdfReading.Gui
                         var reader = new HammPdfReader(new PdfReader(pdfPath));
                         await Task.Run(() =>
                         builder.Join(
-                            reader.ExtendedDetails(),
+                            reader.GetExtendedDetails(),
                             reader.GetModules()));
 
                         indicator.IsDone = true;

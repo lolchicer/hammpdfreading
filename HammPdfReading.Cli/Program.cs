@@ -40,7 +40,7 @@ if (pdfPath != null)
         var pdfReader = new PdfReader(file);
         var reader = new HammPdfReader(pdfReader);
 
-        await Task.Run(() => builder.Join(reader.ExtendedDetails(), reader.GetModules()));
+        await Task.Run(() => builder.Join(reader.GetExtendedDetails(), reader.GetModules()));
         Console.WriteLine($"Содержимое {file} выведено в {databasePath}.\n");
     }
 }
