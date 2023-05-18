@@ -66,11 +66,26 @@ namespace Infor.HammPdfReading.Gui
 
                         PdfList.Items.Add(indicator);
 
-                        var reader = new HammPdfReader(new PdfReader(pdfPath));
-                        await Task.Run(() =>
-                        builder.Join(
-                            reader.GetExtendedDetails(),
-                            reader.GetModules()));
+                        var pdfReader = new PdfReader(pdfPath);
+                        var reader = new HammPdfReader(pdfReader);
+
+                        const int step = 10;
+
+                        var numberOfPagesDiv = pdfReader.NumberOfPages / step;
+
+                        int i = 0;
+
+                        await Task.Run(() => {
+                            for (; i < numberOfPagesDiv; i++)
+                                builder.Join(
+                                    reader.GetExtendedDetails(i * step + 1, step),
+                                    reader.GetModules(i * step + 1, step));
+
+                            if (numberOfPagesDiv * step < pdfReader.NumberOfPages)
+                                builder.Join(
+                                    reader.GetExtendedDetails(i * step + 1, pdfReader.NumberOfPages - numberOfPagesDiv * step),
+                                    reader.GetModules(i * step + 1, pdfReader.NumberOfPages - numberOfPagesDiv * step));
+                        });
 
                         indicator.IsDone = true;
                     }
