@@ -45,51 +45,58 @@ namespace Infor.HammPdfReading.Gui
         {
             PdfList.Items.Clear();
 
-            if (ConfirmButtonIsEnabled())
+            try
             {
-                var pdfFolderExists = Directory.Exists(PdfPathBox.Text);
-
-                if (pdfFolderExists)
+                if (ConfirmButtonIsEnabled())
                 {
-                    var builder = new HammPdfWriter(DatabasePathBox.Text);
+                    var pdfFolderExists = Directory.Exists(PdfPathBox.Text);
 
-                    var databaseExists = new FileInfo(DatabasePathBox.Text).Exists;
-
-                    if (!databaseExists)
-                        builder.Build();
-
-                    var pdfPaths = Directory.GetFiles(PdfPathBox.Text);
-
-                    foreach (var pdfPath in pdfPaths)
+                    if (pdfFolderExists)
                     {
-                        var indicator = new WriteIndicator() { FileName = pdfPath };
+                        var builder = new HammPdfWriter(DatabasePathBox.Text);
 
-                        PdfList.Items.Add(indicator);
+                        var databaseExists = new FileInfo(DatabasePathBox.Text).Exists;
 
-                        var pdfReader = new PdfReader(pdfPath);
-                        var reader = new HammPdfReader(pdfReader);
+                        if (!databaseExists)
+                            builder.Build();
 
-                        const int step = 10;
+                        var pdfPaths = Directory.GetFiles(PdfPathBox.Text);
 
-                        var numberOfPagesDiv = pdfReader.NumberOfPages / step;
+                        foreach (var pdfPath in pdfPaths)
+                        {
+                            var indicator = new WriteIndicator() { FileName = pdfPath };
 
-                        int i = 0;
+                            PdfList.Items.Add(indicator);
 
-                        await Task.Run(() => {
-                            for (; i < numberOfPagesDiv; i++)
-                                builder.Join(
-                                    reader.GetExtendedDetails(i * step + 1, step),
-                                    reader.GetModules(i * step + 1, step));
+                            var pdfReader = new PdfReader(pdfPath);
+                            var reader = new HammPdfReader(pdfReader);
 
-                            if (numberOfPagesDiv * step < pdfReader.NumberOfPages)
-                                builder.Join(
-                                    reader.GetExtendedDetails(i * step + 1, pdfReader.NumberOfPages - numberOfPagesDiv * step),
-                                    reader.GetModules(i * step + 1, pdfReader.NumberOfPages - numberOfPagesDiv * step));
-                        });
+                            const int step = 10;
 
-                        indicator.IsDone = true;
+                            var numberOfPagesDiv = pdfReader.NumberOfPages / step;
+
+                            int i = 0;
+
+                            await Task.Run(() => {
+                                for (; i < numberOfPagesDiv; i++)
+                                    builder.Join(
+                                        reader.GetExtendedDetails(i * step + 1, step),
+                                        reader.GetModules(i * step + 1, step));
+
+                                if (numberOfPagesDiv * step < pdfReader.NumberOfPages)
+                                    builder.Join(
+                                        reader.GetExtendedDetails(i * step + 1, pdfReader.NumberOfPages - numberOfPagesDiv * step),
+                                        reader.GetModules(i * step + 1, pdfReader.NumberOfPages - numberOfPagesDiv * step));
+                            });
+
+                            indicator.IsDone = true;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText("log.txt", ex.ToString());
             }
         }
 
