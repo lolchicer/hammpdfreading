@@ -50,8 +50,6 @@ namespace Infor.HammPdfReading.Gui
 
             try
             {
-                throw new Exception();
-
                 if (ConfirmButtonIsEnabled())
                 {
                     var pdfFolderExists = Directory.Exists(PdfPathBox.Text);
@@ -101,7 +99,7 @@ namespace Infor.HammPdfReading.Gui
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex.ToString());
+                File.WriteAllText("log.txt", ex.ToString());
             }
         }
 
