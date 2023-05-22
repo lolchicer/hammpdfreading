@@ -2,35 +2,34 @@
 {
     public struct ExtendedDetail : IDetail
     {
-        IDetail _iDetail;
+        Detail _detail;
+        
+        public Detail Detail { 
+            get { return _detail; } 
+            set { _detail = value; } }
 
         public double Item {
-            get { return _iDetail.Item; }
-            set { _iDetail.Item = value; } }
+            get { return _detail.Item; }
+            set { _detail.Item = value; } }
         public int PartNo {
-            get { return _iDetail.PartNo; }
-            set { _iDetail.PartNo = value; } }
+            get { return _detail.PartNo; }
+            set { _detail.PartNo = value; } }
         public ValueTuple<int, int> ValidFor {
-            get { return _iDetail.ValidFor; }
-            set { _iDetail.ValidFor = value; } }
+            get { return _detail.ValidFor; }
+            set { _detail.ValidFor = value; } }
         public double Quantity {
-            get { return _iDetail.Quantity; }
-            set { _iDetail.Quantity = value; } }
+            get { return _detail.Quantity; }
+            set { _detail.Quantity = value; } }
         public Unit Unit {
-            get { return _iDetail.Unit; }
-            set { _iDetail.Unit = value; } }
+            get { return _detail.Unit; }
+            set { _detail.Unit = value; } }
         public string Designation {
-            get { return _iDetail.Designation; }
-            set { _iDetail.Designation = value; }
+            get { return _detail.Designation; }
+            set { _detail.Designation = value; }
         }
+
         public int Assembly { get; set; }
 
         public override string ToString() => $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {IDetail.UnitToString(Unit)} {Designation} {Assembly}";
-
-        public ExtendedDetail(Detail detail, int assembly)
-        {
-            _iDetail = detail;
-            Assembly = assembly;
-        }
     }
 }
