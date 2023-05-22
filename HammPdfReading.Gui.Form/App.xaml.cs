@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Extensions.Hosting;
 
 namespace Infor.HammPdfReading.Gui.Form
 {
@@ -13,5 +14,6 @@ namespace Infor.HammPdfReading.Gui.Form
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

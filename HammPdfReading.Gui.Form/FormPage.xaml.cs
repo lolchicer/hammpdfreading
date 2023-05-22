@@ -18,6 +18,7 @@ using Infor.HammPdfReading;
 using Infor.HammPdfReading.Csv;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
 
 namespace Infor.HammPdfReading.Gui
 {
@@ -26,6 +27,8 @@ namespace Infor.HammPdfReading.Gui
     /// </summary>
     public partial class FormPage : Page
     {
+        ILogger<FormPage> _logger;
+
         public FormPage()
         {
             InitializeComponent();
@@ -47,6 +50,8 @@ namespace Infor.HammPdfReading.Gui
 
             try
             {
+                throw new Exception();
+
                 if (ConfirmButtonIsEnabled())
                 {
                     var pdfFolderExists = Directory.Exists(PdfPathBox.Text);
@@ -96,7 +101,7 @@ namespace Infor.HammPdfReading.Gui
             }
             catch (Exception ex)
             {
-                File.WriteAllText("log.txt", ex.ToString());
+                _logger.LogCritical(ex.ToString());
             }
         }
 
