@@ -12,8 +12,9 @@ var context = new Context<List<Detail>>() { Result = new List<Detail>(), Text = 
 
 var expression = new DetailTableExprssion();
 
-expression.Interpret(context);
+expression.Watch(context);
+expression.Write(context);
 
 var writer = new HammPdfWriter("bebra.csv");
 writer.Build();
-writer.Insert((from detail in context.Result select new ExtendedDetail(detail, 123)).ToArray());
+writer.Insert((from detail in context.Result select new ExtendedDetail() { Detail = detail, Assembly = 123 }).ToArray());
