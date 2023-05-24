@@ -23,136 +23,212 @@ namespace Infor.HammPdfReading
 
     public interface IExpression<T>
     {
-        public void Interpret(Context<T> context);
+        public bool IsMatching { get; }
+
+        public void Watch(Context<T> context);
+        public void Write(Context<T> context);
+        public void Move(Context<T> context);
     }
 
-    internal abstract class MovingExpression<T> : IExpression<T>
-    {
-        protected abstract void SetResult(string text, int index, ref T Result);
-        protected abstract void SetIndex(T result, ref int index);
-
-        public void Interpret(Context<T> context)
-        {
-            var contextResult = context.Result;
-            SetResult(context.Text, context.Index, ref contextResult);
-
-            var contextIndex = context.Index;
-            SetIndex(context.Result, ref contextIndex);
-
-            context.Index = contextIndex;
-            context.Result = contextResult;
-        }
-    }
-
-    internal abstract class HorizontalExpression<T> : IExpression<T>
+    public abstract class HorizontalExpression<T> : IExpression<T>
     {
         protected abstract IExpression<T>[] Expressions { get; }
+        protected List<IExpression<T>> MatchingExpressions { get; } = new List<IExpression<T>>();
 
-        public void Interpret(Context<T> context)
+        public bool IsMatching => true;
+
+        public void Watch(Context<T> context)
         {
-            while (context.Index < context.Text.Length) // это не работает без нормальных членов Expressions
+            var startIndex = context.Index;
+
+            bool isMoving = true;
+
+            while (isMoving)
+            {
                 foreach (var expression in Expressions)
-                    expression.Interpret(context);
+                {
+                    expression.Watch(context);
+                    if (expression.IsMatching)
+                    {
+                        MatchingExpressions.Add(expression);
+                        expression.Move(context);
+                        break;
+                    }
+                }
+                isMoving = false;
+            }
+
+            context.Index = startIndex;
+        }
+
+        public void Write(Context<T> context)
+        {
+            foreach (var expression in MatchingExpressions)
+                expression.Write(context);
+        }
+
+        public void Move(Context<T> context)
+        {
+            foreach (var expression in MatchingExpressions)
+                expression.Move(context);
         }
     }
 
     internal abstract class VerticalExpression<T> : IExpression<T>
     {
+        bool _isMatching = false;
+
         protected abstract IExpression<T>[] Expressions { get; }
 
-        public void Interpret(Context<T> context)
+        public bool IsMatching => _isMatching;
+
+        public void Watch(Context<T> context)
+        {
+            var startIndex = context.Index;
+
+            foreach (var expression in Expressions)
+            {
+                _isMatching = true;
+                expression.Watch(context);
+                expression.Move(context);
+                if (!expression.IsMatching)
+                {
+                    _isMatching = false;
+                    break;
+                }
+            }
+
+            context.Index = startIndex;
+        }
+
+        public void Write(Context<T> context)
         {
             foreach (var expression in Expressions)
-                expression.Interpret(context);
+                expression.Write(context);
+        }
+
+        public void Move(Context<T> context)
+        {
+            foreach (var expression in Expressions)
+                expression.Move(context);
         }
     }
 
-    internal abstract class ConvertingExpression<T1, T2> : MovingExpression<T1>
+    public abstract class ConvertingExpression<T1, T2> : IExpression<T1>
     {
-        int _childIndex;
+        bool _isMatching = false;
+
+        protected Context<T2> _childContext;
 
         protected abstract IExpression<T2> Expression { get; }
 
-        protected abstract Context<T2> FromMainContext(string text, int index, T1 result);
-        protected abstract void ToMainContext(Context<T2> childContext, ref T1 result);
+        protected abstract void WriteToChildContext(Context<T1> context);
+        protected abstract void WriteToMainContext(Context<T1> context);
 
-        protected override void SetResult(string text, int index, ref T1 result)
+        public bool IsMatching => _isMatching;
+
+        public void Watch(Context<T1> context)
         {
-            var childContext = FromMainContext(text, index, result);
-
-            Expression.Interpret(childContext);
-
-            _childIndex = childContext.Index;
-            ToMainContext(childContext, ref result);
+            WriteToChildContext(context);
+            Expression.Watch(_childContext);
+            _isMatching = Expression.IsMatching;
         }
 
-        protected override void SetIndex(T1 result, ref int index) =>
-            index = _childIndex;
+        public void Write(Context<T1> context)
+        {
+            Expression.Write(_childContext);
+            WriteToMainContext(context);
+        }
+
+        public void Move(Context<T1> context)
+        {
+            Expression.Move(_childContext);
+            context.Index = _childContext.Index;
+        }
     }
 
-    internal abstract class RegexExpression<T> : MovingExpression<T>
+    internal abstract class MetaExpression<T> : IExpression<T>
+    {
+        bool _isMatching;
+
+        Func<Context<T>, bool> _isPlain;
+
+        protected abstract IExpression<T> Expression { get; }
+
+        public bool IsMatching => _isMatching;
+
+        public void Watch(Context<T> context) { _isMatching = _isPlain(context); }
+        public void Write(Context<T> context) => Expression.Write(context);
+        public void Move(Context<T> context) => Expression.Move(context);
+
+        public MetaExpression(Func<Context<T>, bool> isPlain)
+        {
+            _isPlain = isPlain;
+        }
+    }
+
+    internal abstract class RegexExpression<T> : IExpression<T>
     {
         protected Match _match;
 
         protected abstract string Pattern();
-        protected abstract void Write(ref T result);
 
-        protected override void SetResult(string text, int index, ref T result)
+        public bool IsMatching => _match.Success;
+
+        public void Watch(Context<T> context)
         {
-            _match = Regex.Match(text.Substring(index), Pattern());
-            if (_match.Success)
-                Write(ref result);
+            _match = Regex.Match(context.Text.Substring(context.Index), Pattern());
         }
 
-        protected override void SetIndex(T result, ref int index)
+        public abstract void Write(Context<T> context);
+
+        public void Move(Context<T> context)
         {
-            index += _match.Index + _match.Length;
+            context.Index += _match.Index + _match.Length;
         }
     }
 
-    internal abstract class DetailContextExpression : RegexExpression<DetailContext>
+    internal abstract class DetailRegexExpression : RegexExpression<Detail>
     {
         protected abstract void WriteToDetail(ref Detail detail);
 
-        protected override void Write(ref DetailContext result)
+        public override void Write(Context<Detail> context)
         {
-            var detail = result.Detail;
+            var detail = context.Result;
             WriteToDetail(ref detail);
-            result.Detail = detail;
-            if (!_match.Success)
-                result.IsSkipped = true;
+            context.Result = detail;
         }
     }
 
-    internal class ItemExpression : DetailContextExpression
+    internal class ItemExpression : DetailRegexExpression
     {
         protected override string Pattern() => "[0-9]+(\\.[0-9]{2})?";
         protected override void WriteToDetail(ref Detail detail) =>
             detail.Item = Convert.ToDouble(_match.Value.Replace('.', ','));
     }
 
-    internal class PartNoExpression : DetailContextExpression
+    internal class PartNoExpression : DetailRegexExpression
     {
         protected override string Pattern() => "[0-9]+";
         protected override void WriteToDetail(ref Detail result) =>
             result.PartNo = Convert.ToInt32(_match.Value);
     }
 
-    internal class ValidForExpression : DetailContextExpression
+    internal class ValidForExpression : DetailRegexExpression
     {
         protected override string Pattern() => "[0-9]{1,4}-[0-9]{1,4}";
         protected override void WriteToDetail(ref Detail result) =>
             result.ValidFor = IDetail.ToValidFor(_match.Value);
     }
 
-    internal class QuantityExpression : DetailContextExpression
+    internal class QuantityExpression : DetailRegexExpression
     {
         protected override string Pattern() => "[0-9]+";
         protected override void WriteToDetail(ref Detail result) =>
             result.Quantity = Convert.ToDouble(_match.Value);
     }
 
-    internal class UnitExpression : DetailContextExpression
+    internal class UnitExpression : DetailRegexExpression
     {
         protected override string Pattern() => "[A-Z]{1,2}";
         protected override void WriteToDetail(ref Detail result) =>
@@ -165,165 +241,172 @@ namespace Infor.HammPdfReading
         public string DesignationRussian = string.Empty;
     }
 
-    internal class DesignationSpaceExpression : RegexExpression<Designations>
-    {
-        protected override string Pattern() => "[^А-я]*";
-        protected override void Write(ref Designations result) =>
-            result.DesignationSpace = _match.Value;
-    }
-
-    internal class DesignationRussianExpression : RegexExpression<Designations>
-    {
-        protected override string Pattern() => ".+";
-        protected override void Write(ref Designations result) =>
-            result.DesignationRussian = _match.Value;
-    }
-
-    internal class DesignationRepeatingExrpession : IExpression<string>
-    {
-        public void Interpret(Context<string> context)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class DetailContext
     {
-        public bool IsSkipped { get; set; } = false;
         public Detail Detail { get; set; }
         public List<string> Designations { get; } = new List<string>();
 
         public int DesignationIndex { get; set; }
     }
 
-    internal abstract class DesignationExpression<T> : IExpression<T>
+    internal class DesignationSpaceExpression : RegexExpression<Designations>
     {
-        protected abstract void Write(Context<T> context, string value);
-        protected abstract Context<Designations> FromMainContext(Context<T> mainContext);
+        protected override string Pattern() => "[^А-я]*";
+        public override void Write(Context<Designations> context) =>
+            context.Result.DesignationSpace = _match.Value;
+    }
 
-        public void Interpret(Context<T> context)
+    internal class DesignationRussianExpression : RegexExpression<Designations>
+    {
+        protected override string Pattern() => ".+";
+        public override void Write(Context<Designations> context) =>
+            context.Result.DesignationRussian = _match.Value;
+    }
+
+    internal class DesignationRepeatingExpression : IExpression<Designations>
+    {
+        Match _match;
+
+        public bool IsMatching => _match.Groups[0].Success;
+
+        public void Watch(Context<Designations> context)
         {
-            var designationContext = FromMainContext(context);
+            var reversed = context.Text.Substring(context.Index).ToCharArray();
+            Array.Reverse(reversed);
+            _match = Regex.Match(new string(reversed), "((.|\\n)*)(.|\\n)*\\1");
+        }
 
-            IExpression<Designations>[] expressions = {
-                new DesignationSpaceExpression(),
-                new DesignationRussianExpression()
-            };
+        public void Write(Context<Designations> context)
+        {
+            var matched = _match.Groups[0].Value.ToCharArray();
+            Array.Reverse(matched);
+            context.Result.DesignationRussian = new string(matched);
+        }
 
-            for (int i = 0; i < expressions.Length; i++)
-                expressions[i].Interpret(designationContext);
+        public void Move(Context<Designations> context)
+        {
+            context.Index += _match.Index + _match.Length;
+        }
+    }
 
-            var text = designationContext.Text;
+    internal class DesignationDefaultExpression : VerticalExpression<Designations>
+    {
+        protected override IExpression<Designations>[] Expressions => new IExpression<Designations>[] {
+            new DesignationSpaceExpression(),
+            new DesignationRussianExpression()
+        };
+    }
 
-            string result;
+    internal class DesignationBodyExpression : HorizontalExpression<Designations>
+    {
+        protected override IExpression<Designations>[] Expressions => new IExpression<Designations>[] {
+            new DesignationDefaultExpression(),
+            new DesignationRepeatingExpression()
+        };
+    }
 
-            if (designationContext.Result.DesignationRussian == string.Empty)
+    internal class DesignationExpression : HorizontalExpression<Designations>
+    {
+        IExpression<Designations>[] _expressions;
+
+        protected override IExpression<Designations>[] Expressions => _expressions;
+
+        public DesignationExpression(Func<Context<Designations>, bool> isPlain)
+        {
+            _expressions = new IExpression<Designations>[]
             {
-                // гигантское количество функций, разворачивающих строку
-                var reversed = text.ToCharArray();
-                Array.Reverse(reversed);
-                var reversedMatched = Regex.Match(new string(reversed), "((.|\\n)*)(.|\\n)*\\1");
-                var matched = reversedMatched.Groups[0].Value.ToCharArray();
-                Array.Reverse(matched);
-
-                result = new string(matched) ?? string.Empty;
-            }
-            else
-            {
-                result = designationContext.Result.DesignationRussian;
-            }
-
-            Write(context, result);
-        }
-    }
-
-    internal class DesignationExpressionDetailContext : DesignationExpression<DetailContext>
-    {
-        protected override void Write(Context<DetailContext> context, string value)
-        {
-            context.Result.Designations.Clear();
-
-            // гигансткое количество функций, записывающих результат в структуру
-            var detailClone = context.Result.Detail;
-            detailClone.Designation = value;
-            context.Result.Detail = detailClone;
-        }
-
-        protected override Context<Designations> FromMainContext(Context<DetailContext> mainContext) =>
-            new Context<Designations> { Text = string.Concat(mainContext.Result.Designations), Result = new Designations() };
-    }
-
-    internal class DesignationExpressionDetail : DesignationExpression<Detail>
-    {
-        protected override void Write(Context<Detail> context, string value)
-        {
-            var detailClone = context.Result;
-            detailClone.Designation = value;
-            context.Result = detailClone;
-        }
-
-        protected override Context<Designations> FromMainContext(Context<Detail> mainContext) =>
-            new Context<Designations> { Text = mainContext.Result.Designation, Result = new Designations() };
-    }
-
-    internal class MainExpression : VerticalExpression<DetailContext>
-    {
-        protected override IExpression<DetailContext>[] Expressions => new IExpression<DetailContext>[] {
-                    new ItemExpression(),
-                    new PartNoExpression(),
-                    new ValidForExpression(),
-                    new QuantityExpression(),
-                    new UnitExpression()
-                };
-
-        // должен быть механизм по предотвращению записи пустых строчек (соответственно контекст тоже нужно поменять)
-    }
-
-    internal class DesignationLineExpression : RegexExpression<DetailContext>
-    {
-        protected override string Pattern() => ".*";
-        protected override void Write(ref DetailContext result) =>
-            result.Designations.Add(_match.Value);
-    }
-
-    internal class NewLineExpression : RegexExpression<List<Detail>>
-    {
-        protected override string Pattern() => "\n";
-        protected override void Write(ref List<Detail> result) =>
-            result.Add(new Detail { Designation = string.Empty });
-    }
-
-    internal class DetailExpression : VerticalExpression<DetailContext>
-    {
-        protected override IExpression<DetailContext>[] Expressions => new IExpression<DetailContext>[] {
-                new MainExpression(),
-                new DesignationLineExpression()
+                new DesignationMetaExpression(isPlain)
             };
+        }
+    }
+
+    internal class DesignationMetaExpression : MetaExpression<Designations>
+    {
+        protected override IExpression<Designations> Expression => new DesignationBodyExpression();
+
+        public DesignationMetaExpression(Func<Context<Designations>, bool> isPlain)
+            : base(isPlain) { }
+    }
+
+    internal class DesignationDetailExpression : ConvertingExpression<Detail, Designations>
+    {
+        IExpression<Designations> _expression;
+
+        protected override IExpression<Designations> Expression => _expression;
+
+        protected override void WriteToChildContext(Context<Detail> context)
+        {
+            _childContext = new Context<Designations> { Text = context.Text, Index = context.Index, Result = new Designations() };
+        }
+
+        protected override void WriteToMainContext(Context<Detail> context)
+        {
+            var detailCopy = context.Result;
+            detailCopy.Designation = _childContext.Result.DesignationRussian;
+            context.Result = detailCopy;
+        }
+
+        public DesignationDetailExpression(Func<Context<Designations>, bool> isPlain)
+        {
+            _expression = new DesignationExpression(isPlain);
+        }
+    }
+
+    internal class MainExpression : VerticalExpression<Detail>
+    {
+        protected override IExpression<Detail>[] Expressions => new IExpression<Detail>[] {
+            new ItemExpression(),
+            new PartNoExpression(),
+            new ValidForExpression(),
+            new QuantityExpression(),
+            new UnitExpression()
+        };
+    }
+
+    internal class DetailExpression : VerticalExpression<Detail>
+    {
+        MainExpression _mainExpression;
+        DesignationDetailExpression _designationDetailExpression;
+
+        IExpression<Detail>[] _expressions;
+
+        protected override IExpression<Detail>[] Expressions => _expressions;
+
+        public DetailExpression()
+        {
+            _mainExpression = new MainExpression();
+            _designationDetailExpression = new DesignationDetailExpression((Context<Designations> context) =>
+            {
+                _mainExpression.Watch(new Context<Detail>() { Index = context.Index, Text = context.Text });
+                return _mainExpression.IsMatching;
+            });
+
+            _expressions = new IExpression<Detail>[] {
+                _mainExpression,
+                _designationDetailExpression
+            };
+        }
+    }
+
+    public class DetailTableRowExpression : ConvertingExpression<List<Detail>, Detail>
+    {
+        protected override IExpression<Detail> Expression => new DetailExpression();
+
+        protected override void WriteToChildContext(Context<List<Detail>> context)
+        {
+            _childContext = new Context<Detail>() { Text = context.Text, Index = context.Index };
+        }
+
+        protected override void WriteToMainContext(Context<List<Detail>> context)
+        {
+            context.Result.Add(_childContext.Result);
+        }
     }
 
     public class DetailTableExprssion : HorizontalExpression<List<Detail>>
     {
-        DesignationExpressionDetailContext _designationExpression = new DesignationExpressionDetailContext();
-        DetailExpression _detailExpression = new DetailExpression();
-        protected override IExpression<List<Detail>>[] Expressions { get => new IExpression<List<Detail>>[] {
-                new MainExpression(),
-                new DesignationLineExpression()
-            };
-
-        public void Interpret(Context<List<Detail>> context)
-        {
-            var detailContext = new Context<DetailContext>() { Index = context.Index, Text = context.Text, Result = new DetailContext() };
-            while (context.Index < context.Text.Length)
-            {
-                _detailExpression.Interpret(detailContext);
-                if (!detailContext.Result.IsSkipped)
-                {
-                    _designationExpression.Interpret(detailContext);
-
-                    context.Result.Add(detailContext.Result.Detail);
-                }
-                context.Index = detailContext.Index;
-            }
-        }
+        protected override IExpression<List<Detail>>[] Expressions => new IExpression<List<Detail>>[] {
+            new DetailTableRowExpression(),
+        };
     }
 }
