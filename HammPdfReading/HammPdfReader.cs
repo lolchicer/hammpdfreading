@@ -11,8 +11,13 @@ namespace Infor.HammPdfReading
     {
         public static class Regexes
         {
+            public const string TableHeader =
+                "Position Teile-Nr\\. Gültig für Menge Einheit Benennung Designation Denominación Наименование\r\n" +
+                "Item Part No\\. Valid for Quantity Unit\r\nPosición Referencia Válido para Cantidad Unidad\r\n" +
+                "Позиц\r\nия\r\n№ детали Действует\r\nдля\r\nКоличе\r\nство\nЕд\\.\n";
+
             public const string Table =
-                "(?<=Ед\\.\n)" +
+                $"(?<={TableHeader})" +
                 "(.|\n)*" +
                 "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})";
 
