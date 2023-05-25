@@ -30,6 +30,7 @@ namespace Infor.HammPdfReading
         public void Move(Context<T> context);
     }
 
+    // с RegexExpression создание новых объектов в Expressions ломает _match
     public abstract class HorizontalExpression<T> : IExpression<T>
     {
         protected abstract IExpression<T>[] Expressions { get; }
@@ -54,8 +55,8 @@ namespace Infor.HammPdfReading
                         expression.Move(context);
                         break;
                     }
+                    isMoving = false;
                 }
-                isMoving = false;
             }
 
             context.Index = startIndex;
@@ -136,6 +137,7 @@ namespace Infor.HammPdfReading
 
         public void Write(Context<T1> context)
         {
+            WriteToChildContext(context);
             Expression.Write(_childContext);
             WriteToMainContext(context);
         }
@@ -291,7 +293,7 @@ namespace Infor.HammPdfReading
 
     internal class DesignationDefaultExpression : VerticalExpression<Designations>
     {
-        protected override IExpression<Designations>[] Expressions => new IExpression<Designations>[] {
+        protected override IExpression<Designations>[] Expressions { get; } = new IExpression<Designations>[] {
             new DesignationSpaceExpression(),
             new DesignationRussianExpression()
         };
@@ -299,7 +301,7 @@ namespace Infor.HammPdfReading
 
     internal class DesignationBodyExpression : HorizontalExpression<Designations>
     {
-        protected override IExpression<Designations>[] Expressions => new IExpression<Designations>[] {
+        protected override IExpression<Designations>[] Expressions { get; } = new IExpression<Designations>[] {
             new DesignationDefaultExpression(),
             new DesignationRepeatingExpression()
         };
@@ -322,7 +324,7 @@ namespace Infor.HammPdfReading
 
     internal class DesignationMetaExpression : MetaExpression<Designations>
     {
-        protected override IExpression<Designations> Expression => new DesignationBodyExpression();
+        protected override IExpression<Designations> Expression { get; } = new DesignationBodyExpression();
 
         public DesignationMetaExpression(Func<Context<Designations>, bool> isPlain)
             : base(isPlain) { }
@@ -354,7 +356,7 @@ namespace Infor.HammPdfReading
 
     internal class MainExpression : VerticalExpression<Detail>
     {
-        protected override IExpression<Detail>[] Expressions => new IExpression<Detail>[] {
+        protected override IExpression<Detail>[] Expressions { get; } = new IExpression<Detail>[] {
             new ItemExpression(),
             new PartNoExpression(),
             new ValidForExpression(),
@@ -378,19 +380,19 @@ namespace Infor.HammPdfReading
             _designationDetailExpression = new DesignationDetailExpression((Context<Designations> context) =>
             {
                 _mainExpression.Watch(new Context<Detail>() { Index = context.Index, Text = context.Text });
-                return _mainExpression.IsMatching;
+                return !_mainExpression.IsMatching;
             });
 
             _expressions = new IExpression<Detail>[] {
-                _mainExpression,
-                _designationDetailExpression
+                _mainExpression // ,
+                // _designationDetailExpression
             };
         }
     }
 
     public class DetailTableRowExpression : ConvertingExpression<List<Detail>, Detail>
     {
-        protected override IExpression<Detail> Expression => new DetailExpression();
+        protected override IExpression<Detail> Expression { get; } = new DetailExpression();
 
         protected override void WriteToChildContext(Context<List<Detail>> context)
         {
@@ -405,7 +407,7 @@ namespace Infor.HammPdfReading
 
     public class DetailTableExprssion : HorizontalExpression<List<Detail>>
     {
-        protected override IExpression<List<Detail>>[] Expressions => new IExpression<List<Detail>>[] {
+        protected override IExpression<List<Detail>>[] Expressions { get; } = new IExpression<List<Detail>>[] {
             new DetailTableRowExpression(),
         };
     }
