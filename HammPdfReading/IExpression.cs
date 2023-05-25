@@ -211,7 +211,7 @@ namespace Infor.HammPdfReading
     {
         protected override string Pattern() => "[0-9]+";
         protected override void WriteToDetail(ref Detail result) =>
-            result.PartNo = Convert.ToInt32(_match.Value);
+            result.PartNo = Convert.ToInt64(_match.Value);
     }
 
     internal class ValidForExpression : DetailRegexExpression

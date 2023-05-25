@@ -3,7 +3,7 @@
     public struct Detail : IDetail
     {
         public double Item { get; set; }
-        public int PartNo { get; set; }
+        public Int64 PartNo { get; set; }
         public ValueTuple<int, int> ValidFor { get; set; }
         public double Quantity { get; set; }
         public Unit Unit { get; set; }
@@ -14,7 +14,7 @@
         public static Detail FromFields(string[] fields) => new Detail()
         {
             Item = Convert.ToDouble(fields[0].Replace('.', ',')),
-            PartNo = Convert.ToInt32(fields[1]),
+            PartNo = Convert.ToInt64(fields[1]),
             ValidFor = IDetail.ToValidFor(fields[2]),
             Quantity = Convert.ToDouble(fields[3]),
             Unit = IDetail.ToUnitType(fields[4]),

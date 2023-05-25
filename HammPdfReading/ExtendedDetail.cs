@@ -11,7 +11,7 @@
         public double Item {
             get { return _detail.Item; }
             set { _detail.Item = value; } }
-        public int PartNo {
+        public Int64 PartNo {
             get { return _detail.PartNo; }
             set { _detail.PartNo = value; } }
         public ValueTuple<int, int> ValidFor {
