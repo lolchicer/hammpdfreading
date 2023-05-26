@@ -137,7 +137,6 @@ namespace Infor.HammPdfReading
 
         public void Write(Context<T1> context)
         {
-            WriteToChildContext(context);
             Expression.Write(_childContext);
             WriteToMainContext(context);
         }
