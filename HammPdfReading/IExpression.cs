@@ -75,7 +75,7 @@ namespace Infor.HammPdfReading
         }
     }
 
-    internal abstract class VerticalExpression<T> : IExpression<T>
+    public abstract class VerticalExpression<T> : IExpression<T>
     {
         bool _isMatching = false;
 
@@ -354,7 +354,7 @@ namespace Infor.HammPdfReading
         }
     }
 
-    internal class MainExpression : VerticalExpression<Detail>
+    public class MainExpression : VerticalExpression<Detail>
     {
         protected override IExpression<Detail>[] Expressions { get; } = new IExpression<Detail>[] {
             new ItemExpression(),
