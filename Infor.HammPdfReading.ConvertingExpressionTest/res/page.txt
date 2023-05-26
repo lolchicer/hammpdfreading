@@ -1,0 +1,38 @@
+﻿Position Teile-Nr. Gültig für Menge Einheit Benennung Designation Denominación Наименование
+Item Part No. Valid for Quantity Unit
+Posición Referencia Válido para Cantidad Unidad
+Позиц
+ия
+№ детали Действует
+для
+Количе
+ство
+Ед.
+1 860670 1-9999 1 PC DACH ROOF TECHO КРЫША
+2 1210106 1-9999 4 PC SCHEIBE WASHER ARANDELA ПОДКЛАДНАЯ ШАЙБА
+3 1213830 1-9999 4 PC ZYLINDERSCHRAUBE CHEESE-HEAD SCREW TORNILLO CILÍNDRICO ВИНТ С ЦИЛИНДРИЧЕСКОЙ
+ГОЛОВКОЙ
+4 2534259 1-9999 4 PC SICHERUNGSMUTTER SAFETY NUT TUERCA DE SEGURIDAD ПРЕДОХРАНИТЕЛЬНАЯ ГАЙКА
+5 276766 1-9999 0,84 M DICHTUNGSPROFIL SEALING PROFILE PERFIL DE IMPERMEABILIZACIÓN УПЛОТНИТЕЛЬНЫЙ ПРОФИЛЬ
+6 353434 1-9999 4 PC VERSCHLUSSSTOPFEN FILLER CAP TAPÓN DE CIERRE ПРОБКА
+7 1245945 1-9999 2 PC VERSCHLUSSSTOPFEN FILLER CAP TAPÓN DE CIERRE ПРОБКА
+02.11.00 / 00
+2061674
+FOPS 19.04.2022
+FOPS
+FOPS
+FOPS
+Benennung:
+Designation:
+Denominación:
+Наименование:
+Gruppe:
+Assembly:
+Grupo:
+Группа:
+Baureihe:
+Series:
+Código der serie:
+Конструктивный
+ряд:
+H176 Seite 91
