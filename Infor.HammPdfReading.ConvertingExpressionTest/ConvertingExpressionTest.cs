@@ -5,6 +5,7 @@ namespace Infor.HammPdfReading.UnitTest
     {
         string GetRowText() => Properties.Resources.row;
         string GetRowsText() => Properties.Resources.rows;
+        string GetDesignationText() => Properties.Resources.designation;
 
         [TestMethod]
         public void VerticalMethod()
@@ -136,6 +137,24 @@ namespace Infor.HammPdfReading.UnitTest
 
             for (int i = 0; i < 2; i++)
                 Assert.AreEqual(expected[i], context.Result[i]);
+        }
+
+        [TestMethod]
+        public void DesignationMethod()
+        {
+            var text = GetDesignationText();
+
+            var context = new Context<Designations>
+            {
+                Text = text,
+                Index = 0,
+                Result = new Designations()
+            };
+
+            var expression = new DesignationBodyExpression();
+            expression.Interpet(context);
+
+            Assert.AreEqual(" –€ÿ¿", context.Result.DesignationRussian);
         }
 
         [TestMethod]

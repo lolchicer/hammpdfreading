@@ -46,11 +46,11 @@ namespace Infor.HammPdfReading
                 isMoving = false;
                 foreach (var expression in GetNewExpressions())
                 {
+                    var startIndex = context.Index;
                     expression.Watch(context);
-                    if (expression.IsMatching)
+                    if (expression.IsMatching && startIndex != context.Index)
                     {
                         MatchingExpressions.Add(expression);
-                        expression.Move(context);
                         isMoving = true;
                         break;
                     }
@@ -276,7 +276,7 @@ namespace Infor.HammPdfReading
         };
     }
 
-    internal class DesignationBodyExpression : HorizontalExpression<Designations>
+    public class DesignationBodyExpression : HorizontalExpression<Designations>
     {
         protected override IExpression<Designations>[] GetNewExpressions() => new IExpression<Designations>[] {
             new DesignationDefaultExpression(),
