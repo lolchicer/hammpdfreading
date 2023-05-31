@@ -30,6 +30,32 @@ namespace Infor.HammPdfReading
         public void Move(Context<T> context);
     }
 
+    // использование этого класса должно быть заменено на использование HorizontalExpression<T> и стратегию для кастинга результатов
+    public abstract class SwitchExpression<T> : ClientExpression<T>
+    {
+        IExpression<T> _selectedExpression;
+
+        protected abstract IExpression<T>[] Expressions { get; }
+
+        public override bool IsMatching => _selectedExpression.IsMatching;
+
+        protected override void WatchBody(Context<T> context)
+        {
+            foreach (var expression in Expressions)
+            {
+                expression.Watch(context);
+                if (expression.IsMatching)
+                {
+                    _selectedExpression = expression;
+                    break;
+                }
+            }
+        }
+
+        protected override void WriteBody(Context<T> context) => _selectedExpression.Write(context);
+        public override void Move(Context<T> context) { }
+    }
+
     public abstract class HorizontalExpression<T> : ClientExpression<T>
     {
         protected abstract IExpression<T>[] GetNewExpressions();
@@ -118,6 +144,7 @@ namespace Infor.HammPdfReading
 
         protected override void WriteBody(Context<T1> context)
         {
+            WriteToChildContext(context);
             Expression.Write(_childContext);
             WriteToMainContext(context);
         }
@@ -130,7 +157,7 @@ namespace Infor.HammPdfReading
 
     internal abstract class MetaExpression<T> : ClientExpression<T>
     {
-        bool _isMatching;
+        bool _isMatching = false;
 
         Func<Context<T>, bool> _watch;
 
@@ -138,7 +165,14 @@ namespace Infor.HammPdfReading
 
         public override bool IsMatching => _isMatching;
 
-        protected override void WatchBody(Context<T> context) { _isMatching = _watch(context); }
+        protected override void WatchBody(Context<T> context)
+        {
+            if (_watch(context))
+            {
+                Expression.Watch(context);
+                _isMatching = Expression.IsMatching;
+            }
+        }
         protected override void WriteBody(Context<T> context) => Expression.Write(context);
         public override void Move(Context<T> context) { }
 
@@ -276,9 +310,9 @@ namespace Infor.HammPdfReading
         };
     }
 
-    public class DesignationBodyExpression : HorizontalExpression<Designations>
+    public class DesignationBodyExpression : SwitchExpression<Designations>
     {
-        protected override IExpression<Designations>[] GetNewExpressions() => new IExpression<Designations>[] {
+        protected override IExpression<Designations>[] Expressions { get; } = new IExpression<Designations>[] {
             new DesignationDefaultExpression(),
             new DesignationRepeatingExpression()
         };
@@ -327,7 +361,7 @@ namespace Infor.HammPdfReading
 
         public DesignationDetailExpression(Func<Context<Designations>, bool> isPlain)
         {
-            _expression = new DesignationExpression(isPlain);
+            _expression = new DesignationMetaExpression(isPlain);
         }
     }
 
@@ -356,13 +390,19 @@ namespace Infor.HammPdfReading
             _mainExpression = new MainExpression();
             _designationDetailExpression = new DesignationDetailExpression((Context<Designations> context) =>
             {
-                _mainExpression.Watch(new Context<Detail>() { Index = context.Index, Text = context.Text });
-                return !_mainExpression.IsMatching;
+                var textCut = context.Text.Substring(
+                    0,
+                    context.Index +
+                    context.Text.Substring(
+                        context.Index).IndexOf('\n'));
+                var conditionExpression = new MainExpression();
+                conditionExpression.Watch(new Context<Detail>() { Index = context.Index, Text = textCut });
+                return !conditionExpression.IsMatching;
             });
 
             _expressions = new IExpression<Detail>[] {
-                _mainExpression // ,
-                // _designationDetailExpression
+                _mainExpression,
+                _designationDetailExpression
             };
         }
     }

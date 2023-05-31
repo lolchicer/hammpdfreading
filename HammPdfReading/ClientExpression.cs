@@ -11,9 +11,12 @@
 
         public void Watch(Context<T> context)
         {
-            WatchBody(context);
-            if (IsMatching)
-                Move(context);
+            if (context.Index < context.Text.Length)
+            {
+                WatchBody(context);
+                if (IsMatching)
+                    Move(context);
+            }
         }
 
         public void Write(Context<T> context)

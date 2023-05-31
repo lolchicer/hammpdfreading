@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static iTextSharp.text.pdf.PdfDocument;
 
 namespace Infor.HammPdfReading.UnitTest
 {
@@ -47,5 +48,34 @@ namespace Infor.HammPdfReading.UnitTest
         {
             new MainListConvertingExpression()
         };
+    }
+
+    internal class DesignationListConvertingExpression : ConvertingExpression<List<Designations>, Designations>
+    {
+        protected override IExpression<Designations> Expression { get; } = new DesignationBodyExpression();
+
+        protected override void WriteToChildContext(Context<List<Designations>> context)
+        {
+            _childContext = new Context<Designations>()
+            {
+                Index = context.Index,
+                Text = context.Text,
+                Result = new Designations()
+            };
+        }
+
+        protected override void WriteToMainContext(Context<List<Designations>> context)
+        {
+            context.Result.Add(_childContext.Result);
+        }
+    }
+
+    internal class DesignationListExpression : HorizontalExpression<List<Designations>>
+    {
+        protected override IExpression<List<Designations>>[] GetNewExpressions() => 
+            new IExpression<List<Designations>>[]
+            { 
+                new DesignationListConvertingExpression() 
+            };
     }
 }

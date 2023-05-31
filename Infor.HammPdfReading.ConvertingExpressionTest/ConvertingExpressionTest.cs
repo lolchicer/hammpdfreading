@@ -158,6 +158,35 @@ namespace Infor.HammPdfReading.UnitTest
         }
 
         [TestMethod]
+        public void DesignationsMethod()
+        {
+            var text = GetRowsText();
+
+            var context = new Context<List<Designations>>
+            {
+                Text = text,
+                Index = 0,
+                Result = new List<Designations>()
+            };
+
+            var expression = new DesignationListExpression();
+            expression.Interpet(context);
+
+            var expected =
+                new string[]
+                {
+                    " –€ÿ¿",
+                    "œŒƒ À¿ƒÕ¿ﬂ ÿ¿…¡¿"
+                };
+
+            for (int i = 0; i < 2; i++)
+            {
+                context.Result[i].DesignationRussian = context.Result[i].DesignationRussian.Trim();
+                Assert.AreEqual(expected[i], context.Result[i].DesignationRussian);
+            }
+        }
+
+        [TestMethod]
         public void DetailsMethod()
         {
             var text = GetRowsText();
@@ -181,8 +210,8 @@ namespace Infor.HammPdfReading.UnitTest
                         PartNo = 860670,
                         ValidFor = (1, 9999),
                         Quantity = 1,
-                        Unit = Unit.PC //,
-                        // Designation = " –€ÿ¿"
+                        Unit = Unit.PC,
+                        Designation = " –€ÿ¿"
                     },
                     new Detail()
                     {
@@ -190,13 +219,25 @@ namespace Infor.HammPdfReading.UnitTest
                         PartNo = 1210106,
                         ValidFor = (1, 9999),
                         Quantity = 4,
-                        Unit = Unit.PC //,
-                        // Designation = "œŒƒ À¿ƒÕ¿ﬂ ÿ¿…¡¿"
+                        Unit = Unit.PC,
+                        Designation = "œŒƒ À¿ƒÕ¿ﬂ ÿ¿…¡¿"
                     }
                 };
 
+            var trimmedResult = new List<Detail>();
+            foreach (var detail in context.Result)
+                trimmedResult.Add(new Detail()
+                {
+                    Item = detail.Item,
+                    PartNo = detail.PartNo,
+                    ValidFor = detail.ValidFor,
+                    Quantity = detail.Quantity,
+                    Unit = detail.Unit,
+                    Designation = detail.Designation.Trim()
+                });
+
             for (int i = 0; i < 2; i++)
-                Assert.AreEqual(expected[i], context.Result[i]);
+                Assert.AreEqual(expected[i], trimmedResult[i]);
         }
     }
 }
