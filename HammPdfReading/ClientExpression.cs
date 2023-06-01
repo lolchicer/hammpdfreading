@@ -7,7 +7,7 @@
 
         public abstract bool IsMatching { get; }
 
-        public abstract void Move(Context<T> context);
+        protected abstract void Move(Context<T> context);
 
         public void Watch(Context<T> context)
         {

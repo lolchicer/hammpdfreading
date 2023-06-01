@@ -27,7 +27,6 @@ namespace Infor.HammPdfReading
 
         public void Watch(Context<T> context);
         public void Write(Context<T> context);
-        public void Move(Context<T> context);
     }
 
     // использование этого класса должно быть заменено на использование HorizontalExpression<T> и стратегию для кастинга результатов
@@ -53,7 +52,7 @@ namespace Infor.HammPdfReading
         }
 
         protected override void WriteBody(Context<T> context) => _selectedExpression.Write(context);
-        public override void Move(Context<T> context) { }
+        protected override void Move(Context<T> context) { }
     }
 
     public abstract class HorizontalExpression<T> : ClientExpression<T>
@@ -90,7 +89,7 @@ namespace Infor.HammPdfReading
                 expression.Write(context);
         }
 
-        public override void Move(Context<T> context) { }
+        protected override void Move(Context<T> context) { }
     }
 
     public abstract class VerticalExpression<T> : ClientExpression<T>
@@ -119,7 +118,7 @@ namespace Infor.HammPdfReading
                 expression.Write(context);
         }
 
-        public override void Move(Context<T> context) { }
+        protected override void Move(Context<T> context) { }
     }
 
     public abstract class ConvertingExpression<T1, T2> : ClientExpression<T1>
@@ -149,7 +148,7 @@ namespace Infor.HammPdfReading
             WriteToMainContext(context);
         }
 
-        public override void Move(Context<T1> context)
+        protected override void Move(Context<T1> context)
         {
             context.Index = _childContext.Index;
         }
@@ -174,7 +173,7 @@ namespace Infor.HammPdfReading
             }
         }
         protected override void WriteBody(Context<T> context) => Expression.Write(context);
-        public override void Move(Context<T> context) { }
+        protected override void Move(Context<T> context) { }
 
         public MetaExpression(Func<Context<T>, bool> watch)
         {
@@ -195,7 +194,7 @@ namespace Infor.HammPdfReading
             _match = Regex.Match(context.Text.Substring(context.Index), Pattern());
         }
 
-        public override void Move(Context<T> context)
+        protected override void Move(Context<T> context)
         {
             context.Index += _match.Index + _match.Length;
         }
@@ -296,7 +295,7 @@ namespace Infor.HammPdfReading
             context.Result.DesignationRussian = new string(matched);
         }
 
-        public override void Move(Context<Designations> context)
+        protected override void Move(Context<Designations> context)
         {
             context.Index += _match.Index + _match.Length;
         }
