@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HammPdfReading\Infor.HammPdfReading.csproj" />
+    <ProjectReference Include="..\Infor.HammPdfReading.Interpreter\Infor.HammPdfReading.Interpreter.csproj" />
   </ItemGroup>
 
   <ItemGroup>

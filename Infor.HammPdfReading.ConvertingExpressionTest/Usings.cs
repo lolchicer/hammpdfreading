@@ -1,2 +1,2 @@
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
-global using Infor.HammPdfReading;
+global using Infor.HammPdfReading.Interpreter;

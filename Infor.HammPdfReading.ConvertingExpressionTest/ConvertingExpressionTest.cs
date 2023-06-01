@@ -19,7 +19,7 @@ namespace Infor.HammPdfReading.UnitTest
             };
 
             var expression = new MainExpression();
-            expression.Interpet(context);
+            expression.Interpret(context);
 
             Assert.AreEqual(
                 new Detail()
@@ -45,7 +45,7 @@ namespace Infor.HammPdfReading.UnitTest
             };
 
             var expression = new TestConvertingExpression();
-            expression.Interpet(context);
+            expression.Interpret(context);
 
             Assert.AreEqual(
                 new Detail()
@@ -72,7 +72,7 @@ namespace Infor.HammPdfReading.UnitTest
             };
 
             var expression = new MainListVerticalExpression();
-            expression.Interpet(context);
+            expression.Interpret(context);
 
             var expected =
                 new Detail[]
@@ -112,7 +112,7 @@ namespace Infor.HammPdfReading.UnitTest
             };
 
             var expression = new MainListHorizontalExpression();
-            expression.Interpet(context);
+            expression.Interpret(context);
 
             var expected =
                 new Detail[]
@@ -152,7 +152,7 @@ namespace Infor.HammPdfReading.UnitTest
             };
 
             var expression = new DesignationBodyExpression();
-            expression.Interpet(context);
+            expression.Interpret(context);
 
             Assert.AreEqual(" –€ÿ¿", context.Result.DesignationRussian);
         }
@@ -170,7 +170,7 @@ namespace Infor.HammPdfReading.UnitTest
             };
 
             var expression = new DesignationListExpression();
-            expression.Interpet(context);
+            expression.Interpret(context);
 
             var expected =
                 new string[]
@@ -199,7 +199,7 @@ namespace Infor.HammPdfReading.UnitTest
             };
 
             var expression = new DetailTableExprssion();
-            expression.Interpet(context);
+            expression.Interpret(context);
 
             var expected =
                 new Detail[]
