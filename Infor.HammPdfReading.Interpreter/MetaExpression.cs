@@ -8,7 +8,7 @@
 
         protected abstract IExpression<T> Expression { get; }
 
-        public override bool IsMatching => _isMatching;
+        protected override bool IsMatchingBody => _isMatching;
 
         protected override void WatchBody(Context<T> context)
         {

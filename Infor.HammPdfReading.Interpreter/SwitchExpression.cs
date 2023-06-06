@@ -10,7 +10,16 @@ namespace Infor.HammPdfReading.Interpreter
 
         protected abstract IExpression<T>[] Expressions { get; }
 
-        public override bool IsMatching => _selectedExpression.IsMatching;
+        protected override bool IsMatchingBody
+        { 
+            get
+            {
+                if (_selectedExpression == null)
+                    return false;
+                else
+                    return _selectedExpression.IsMatching;
+            } 
+        }
 
         protected override void WatchBody(Context<T> context)
         {

@@ -11,7 +11,7 @@
         protected abstract void WriteToChildContext(Context<T1> context);
         protected abstract void WriteToMainContext(Context<T1> context);
 
-        public override bool IsMatching => _isMatching;
+        protected override bool IsMatchingBody => _isMatching;
 
         protected override void WatchBody(Context<T1> context)
         {

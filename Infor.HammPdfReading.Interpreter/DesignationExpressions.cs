@@ -26,7 +26,7 @@ namespace Infor.HammPdfReading.Interpreter
     {
         Match _match;
 
-        public override bool IsMatching => _match.Groups[0].Success;
+        protected override bool IsMatchingBody => _match.Groups[0].Success;
 
         protected override void WatchBody(Context<Designations> context)
         {
@@ -66,16 +66,14 @@ namespace Infor.HammPdfReading.Interpreter
 
     public class DesignationExpression : HorizontalExpression<Designations>
     {
-        IExpression<Designations>[] _expressions;
+        Func<Context<Designations>, bool> _watch;
 
-        protected override IExpression<Designations>[] GetNewExpressions() => _expressions;
+        protected override IExpression<Designations>[] GetNewExpressions() => new IExpression<Designations>[] {
+            new DesignationMetaExpression(_watch) };
 
-        public DesignationExpression(Func<Context<Designations>, bool> isPlain)
+        public DesignationExpression(Func<Context<Designations>, bool> watch)
         {
-            _expressions = new IExpression<Designations>[]
-            {
-                new DesignationMetaExpression(isPlain)
-            };
+            _watch = watch;
         }
     }
 

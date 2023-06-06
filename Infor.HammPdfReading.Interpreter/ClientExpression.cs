@@ -5,7 +5,18 @@
         protected abstract void WatchBody(Context<T> context);
         protected abstract void WriteBody(Context<T> context);
 
-        public abstract bool IsMatching { get; }
+        bool _isOob = false;
+        protected abstract bool IsMatchingBody { get; }
+        public bool IsMatching 
+        { 
+            get
+            {
+                if (_isOob)
+                    return false;
+                else
+                    return IsMatchingBody;
+            } 
+        } 
 
         protected abstract void Move(Context<T> context);
 
@@ -14,9 +25,11 @@
             if (context.Index < context.Text.Length)
             {
                 WatchBody(context);
-                if (IsMatching)
+                if (IsMatchingBody)
                     Move(context);
             }
+            else
+                _isOob = true;
         }
 
         public void Write(Context<T> context)
@@ -29,7 +42,7 @@
         {
             Watch(context);
             context.Index = 0;
-            if (IsMatching)
+            if (IsMatchingBody)
                 Write(context);
         }
     }

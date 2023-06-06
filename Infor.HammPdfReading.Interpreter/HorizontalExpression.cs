@@ -5,7 +5,7 @@
         protected abstract IExpression<T>[] GetNewExpressions();
         protected List<IExpression<T>> MatchingExpressions { get; } = new List<IExpression<T>>();
 
-        public override bool IsMatching => true;
+        protected override bool IsMatchingBody => true;
 
         protected override void WatchBody(Context<T> context)
         {

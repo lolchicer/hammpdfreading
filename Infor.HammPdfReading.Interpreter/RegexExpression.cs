@@ -8,7 +8,7 @@ namespace Infor.HammPdfReading.Interpreter
 
         protected abstract string Pattern();
 
-        public override bool IsMatching => _match.Success;
+        protected override bool IsMatchingBody => _match.Success;
 
         protected override void WatchBody(Context<T> context)
         {

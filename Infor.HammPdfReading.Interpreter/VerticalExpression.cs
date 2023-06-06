@@ -6,7 +6,7 @@
 
         protected abstract IExpression<T>[] Expressions { get; }
 
-        public override bool IsMatching => _isMatching;
+        protected override bool IsMatchingBody => _isMatching;
 
         protected override void WatchBody(Context<T> context)
         {
