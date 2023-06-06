@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using static iTextSharp.text.pdf.PdfDocument;
+﻿using System.Text.RegularExpressions;
 
 namespace Infor.HammPdfReading.UnitTest
 {
@@ -77,5 +76,20 @@ namespace Infor.HammPdfReading.UnitTest
             { 
                 new DesignationListConvertingExpression() 
             };
+    }
+
+    public class HeaderDesignationLookforwardExpression : VerticalExpression<Module>
+    {
+        IExpression<Module>[] _expressions;
+
+        protected override IExpression<Module>[] Expressions => _expressions;
+
+        public HeaderDesignationLookforwardExpression()
+        {
+            _expressions = new IExpression<Module>[] {
+                new DesignationModuleExpression(),
+                new SeriesExpression()
+            };
+        }
     }
 }

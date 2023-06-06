@@ -121,8 +121,20 @@
   <data name="designation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\designation.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="header" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\header.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="header_designation_lookforward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\header-designation-lookforward.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="header_designation_lookforward2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\header-designation-lookforward2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="page" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\page.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="page2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\page2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="row" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\row.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

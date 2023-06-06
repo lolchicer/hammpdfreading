@@ -70,6 +70,68 @@ namespace Infor.HammPdfReading.UnitTest.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 02.11.00 / 00
+        ///2061674
+        ///FOPS 19.04.2022
+        ///FOPS
+        ///FOPS
+        ///FOPS
+        ///Benennung:
+        ///Designation:
+        ///Denominación:
+        ///Наименование:
+        ///Gruppe:
+        ///Assembly:
+        ///Grupo:
+        ///Группа:
+        ///Baureihe:
+        ///Series:
+        ///Código der serie:
+        ///Конструктивный
+        ///ряд:
+        ///H176 Seite 91.
+        /// </summary>
+        internal static string header {
+            get {
+                return ResourceManager.GetString("header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FOPS
+        ///FOPS
+        ///FOPS
+        ///Benennung:
+        ///Designation:
+        ///Denominación:
+        ///Наименование:
+        ///Gruppe:
+        ///Assembly:
+        ///Grupo:
+        ///Группа:
+        ///Baureihe:
+        ///Series:
+        ///Código der serie:
+        ///Конструктивный
+        ///ряд:
+        ///H176 Seite 91.
+        /// </summary>
+        internal static string header_designation_lookforward {
+            get {
+                return ResourceManager.GetString("header_designation_lookforward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string header_designation_lookforward2 {
+            get {
+                return ResourceManager.GetString("header_designation_lookforward2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Position Teile-Nr. Gültig für Menge Einheit Benennung Designation Denominación Наименование
         ///Item Part No. Valid for Quantity Unit
         ///Posición Referencia Válido para Cantidad Unidad
@@ -89,6 +151,28 @@ namespace Infor.HammPdfReading.UnitTest.Properties {
         internal static string page {
             get {
                 return ResourceManager.GetString("page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position Teile-Nr. Gültig für Menge Einheit Benennung Designation Denominación Наименование
+        ///Item Part No. Valid for Quantity Unit
+        ///Posición Referencia Válido para Cantidad Unidad
+        ///Позиц
+        ///ия
+        ///№ детали Действует
+        ///для
+        ///Количе
+        ///ство
+        ///Ед.
+        ///53 2127017 1-9999 1 PC SECHSKANTMUTTER HEXAGONAL NUT TUERCA HEXAGONAL ШЕСТИГРАННАЯ ГАЙКА
+        ///55 430374 1-9999 1 PC SCHLIESSBOLZEN CLOSING BOLT PERNO DE CIERRE ЗАПОРНЫЙ ПАЛЕЦ
+        ///56 2175174 1-9999 2 PC SICHERUNGSSCHEIBE LOCKING WASHER DISCO DE SEGURIDAD СТОПОРНАЯ ШАЙБА
+        ///57 2127021 1 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string page2 {
+            get {
+                return ResourceManager.GetString("page2", resourceCulture);
             }
         }
         

@@ -6,6 +6,9 @@ namespace Infor.HammPdfReading.UnitTest
         string GetRowText() => Properties.Resources.row;
         string GetRowsText() => Properties.Resources.rows;
         string GetDesignationText() => Properties.Resources.designation;
+        string GetHeaderText() => Properties.Resources.header;
+        string GetPageText() => Properties.Resources.page;
+        string GetHeaderDesignationLookforwardText() => Properties.Resources.header_designation_lookforward2;
 
         [TestMethod]
         public void VerticalMethod()
@@ -238,6 +241,54 @@ namespace Infor.HammPdfReading.UnitTest
 
             for (int i = 0; i < 2; i++)
                 Assert.AreEqual(expected[i], trimmedResult[i]);
+        }
+
+        [TestMethod]
+        public void HeaderDesignationLookforwardMethod()
+        {
+            var text = GetHeaderDesignationLookforwardText();
+
+            var context = new Context<Module>()
+            {
+                Index = 0,
+                Text = text
+            };
+
+            var expression = new HeaderDesignationLookforwardExpression();
+            expression.Interpret(context);
+
+            var expected = new Module()
+            {
+                Designation = "FOPS",
+                Series = "H176 Seite 91"
+            };
+
+            Assert.AreEqual(expected, context.Result);
+        }
+
+        [TestMethod]
+        public void HeaderMethod()
+        {
+            var text = GetHeaderText();
+
+            var context = new Context<Module>()
+            {
+                Index = 0,
+                Text = text,
+            };
+
+            var moduleExpression = new ModuleExpression();
+            moduleExpression.Interpret(context);
+
+            var expected = new Module()
+            {
+                Assembly = "02.11.00 / 00",
+                No = 2061674,
+                Designation = "FOPS",
+                Series = "H176 Seite 91"
+            };
+
+            Assert.AreEqual(expected, context.Result);
         }
     }
 }

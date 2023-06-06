@@ -1,0 +1,39 @@
+﻿Position Teile-Nr. Gültig für Menge Einheit Benennung Designation Denominación Наименование
+Item Part No. Valid for Quantity Unit
+Posición Referencia Válido para Cantidad Unidad
+Позиц
+ия
+№ детали Действует
+для
+Количе
+ство
+Ед.
+53 2127017 1-9999 1 PC SECHSKANTMUTTER HEXAGONAL NUT TUERCA HEXAGONAL ШЕСТИГРАННАЯ ГАЙКА
+55 430374 1-9999 1 PC SCHLIESSBOLZEN CLOSING BOLT PERNO DE CIERRE ЗАПОРНЫЙ ПАЛЕЦ
+56 2175174 1-9999 2 PC SICHERUNGSSCHEIBE LOCKING WASHER DISCO DE SEGURIDAD СТОПОРНАЯ ШАЙБА
+57 2127021 1-9999 1 PC SECHSKANTMUTTER HEXAGONAL NUT TUERCA HEXAGONAL ШЕСТИГРАННАЯ ГАЙКА
+142 1485873 1-9999 1 PC BLECH METAL PLATE CHAPA МЕТАЛЛИЧЕСКАЯ ПЛИТА
+143 2538193 1-9999 2 PC SECHSKANTSCHRAUBE HEXAGON SCREW TORNILLO HEXAGONAL ШЕСТИГРАННЫЙ ВИНТ
+144 216607 1-9999 2 PC SCHEIBE WASHER ARANDELA ПОДКЛАДНАЯ ШАЙБА
+145 345490 1-9999 2 PC SCHEIBE WASHER ARANDELA ПОДКЛАДНАЯ ШАЙБА
+146 2588141 1-9999 2 PC SICHERUNGSMUTTER SAFETY NUT TUERCA DE SEGURIDAD ПРЕДОХРАНИТЕЛЬНАЯ ГАЙКА
+01.05.01 / 00
+2061655
+VERKLEIDUNGSTEILE UND DECKEL 19.04.2022
+CANOPIES AND COVERS
+PIEZAS DE REVESTIMIENTO Y TAPAS
+ЧАСТИ ОБЛИЦОВКИ И КРЫШКА
+Benennung:
+Designation:
+Denominación:
+Наименование:
+Gruppe:
+Assembly:
+Grupo:
+Группа:
+Baureihe:
+Series:
+Código der serie:
+Конструктивный
+ряд:
+H176 Seite 39
