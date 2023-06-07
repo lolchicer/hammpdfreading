@@ -8,7 +8,7 @@
         public double Quantity { get; set; }
         public Unit Unit { get; set; }
         public string Designation { get; set; }
-        public int Assembly { get; set; }
+        public string Assembly { get; set; }
 
         public override string ToString() => $"{Item} {PartNo} {ValidFor.Item1}-{ValidFor.Item2} {Quantity} {IDetail.UnitToString(Unit)} {Designation} {Assembly}";
     }

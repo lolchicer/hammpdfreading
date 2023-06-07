@@ -203,7 +203,7 @@ namespace Infor.HammPdfReading
             var pageInfo = ContinuousMatch(
                 Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value,
                 Regexes.PageInfoToArray());
-            var assembly = Convert.ToInt32(pageInfo[1]);
+            var assembly = pageInfo[1];
 
             foreach (var detail in GetDetails(text))
                 details.Add(new ExtendedDetail()
