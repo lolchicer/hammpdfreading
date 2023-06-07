@@ -17,7 +17,7 @@ namespace Infor.HammPdfReading
                 "(?=\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2})";
 
             public const string Item = "[0-9]+(\\.[0-9]{2})?";
-            public const string PartNo = "[0-9]+";
+            public const string PartNo = "(|F|M)[0-9]+";
             public const string ValidFor = "[0-9]{1,4}-[0-9]{1,4}";
             public const string Quantity = "[0-9]+";
             public const string Unit = "[A-Z]{1,2}";

@@ -3,7 +3,7 @@
     internal interface IDetail
     {
         public double Item { get; set; }
-        public Int64 PartNo { get; set; }
+        public string PartNo { get; set; }
         public ValueTuple<int, int> ValidFor { get; set; }
         public double Quantity { get; set; }
         public Unit Unit { get; set; }
