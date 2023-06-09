@@ -10,8 +10,8 @@ namespace Infor.HammPdfReading.Csv
 
         public void Build()
         {
-            using (FileStream stream = File.Create(_path))
-                JoinHeader();
+            using (FileStream stream = File.Create(_path)) ;
+            JoinHeader();
         }
 
         public void Insert(ExtendedDetail detail)
