@@ -10,7 +10,8 @@ namespace Infor.HammPdfReading.Csv
 
         public void Build()
         {
-            using (FileStream stream = File.Create(_path)) ;
+            using (FileStream stream = File.Create(_path))
+                JoinHeader();
         }
 
         public void Insert(ExtendedDetail detail)
@@ -35,7 +36,7 @@ namespace Infor.HammPdfReading.Csv
             }
         }
 
-        public void Join(ExtendedDetail[] details, Module[] modules)
+        public void JoinHeader()
         {
             using (StreamWriter writer = new StreamWriter(_path, true, Encoding.UTF8))
             {
@@ -56,7 +57,16 @@ namespace Infor.HammPdfReading.Csv
                         "Наименование"
                     })
                         csvWriter.WriteField(header);
-                    csvWriter.NextRecord();
+                }
+            }
+        }
+
+        public void Join(ExtendedDetail[] details, Module[] modules)
+        {
+            using (StreamWriter writer = new StreamWriter(_path, true, Encoding.UTF8))
+            {
+                using (CsvWriter csvWriter = new CsvWriter(writer, new CultureInfo("ru-RU", false)))
+                {
                     foreach (var module in modules)
                         foreach (var detail in details)
                             if (detail.Assembly == module.No)
