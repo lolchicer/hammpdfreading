@@ -21,7 +21,7 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <TextBox x:Name="OutputPathBox" Grid.Row="0" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
-                    <Button Grid.Row="0" Grid.Column="1" Click="DatabasePathButton_Click">CSV-файл...</Button>
+                    <Button Grid.Row="0" Grid.Column="1" Click="DatabasePathButton_Click">Папка для вывода...</Button>
                     <TextBox x:Name="PdfPathBox" Grid.Row="1" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
                     <Button Grid.Row="1" Grid.Column="1" Click="PdfPathButton_Click">Папка с PDF-файлами...</Button>
                 </Grid>
