@@ -5,6 +5,11 @@ namespace Infor.HammPdfReading
 {
     public partial class HammPdfReader
     {
+        /// <summary>
+        /// выводит текст в Module. при этом картинки игнорируются.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         static Module GetModule(string text)
         {
             var pageInfo = ContinuousMatch(
@@ -20,7 +25,10 @@ namespace Infor.HammPdfReading
 
             var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
 
-            return GetModule(text);
+            var module = GetModule(text);
+            module.Images = GetImages(page);
+
+            return module;
         }
 
         public Module[] GetModules(int page, int count)
