@@ -11,23 +11,20 @@
     <Grid>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <TextBox x:Name="OutputPathBox" Grid.Row="0" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
-                <Button Grid.Row="0" Grid.Column="1" Click="DatabasePathButton_Click">...</Button>
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="CSV-файл"></TextBlock>
-                <TextBox x:Name="PdfPathBox" Grid.Row="1" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
-                <Button Grid.Row="1" Grid.Column="1" Click="PdfPathButton_Click">...</Button>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="Папка с PDF-файлами"></TextBlock>
-            </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="OutputPathBox" Grid.Row="0" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
+                    <Button Grid.Row="0" Grid.Column="1" Click="DatabasePathButton_Click">CSV-файл...</Button>
+                    <TextBox x:Name="PdfPathBox" Grid.Row="1" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
+                    <Button Grid.Row="1" Grid.Column="1" Click="PdfPathButton_Click">Папка с PDF-файлами...</Button>
+                </Grid>
                 <Button x:Name="ConfirmButton" Click="ConfirmButton_Click" IsEnabled="false">Записать</Button>
             </StackPanel>
             <ListView x:Name="PdfList" DockPanel.Dock="Bottom"></ListView>
