@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Gui.Fo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Cli", "HammPdfReading.Cli\Infor.HammPdfReading.Cli.csproj", "{CDDCBF42-4DEE-4880-81F8-D168BEE6C8DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infor.HammPdfReading.Testing.Image", "Infor.HammPdfReading.Testing.Image\Infor.HammPdfReading.Testing.Image.csproj", "{39C3A461-29D3-4534-8831-C9D942E311CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Testing", "Infor.HammPdfReading.Testing.Image\Infor.HammPdfReading.Testing.csproj", "{39C3A461-29D3-4534-8831-C9D942E311CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
