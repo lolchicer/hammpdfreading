@@ -21,7 +21,7 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="DatabasePathBox" Grid.Row="0" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
+                <TextBox x:Name="OutputPathBox" Grid.Row="0" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>
                 <Button Grid.Row="0" Grid.Column="1" Click="DatabasePathButton_Click">...</Button>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="CSV-файл"></TextBlock>
                 <TextBox x:Name="PdfPathBox" Grid.Row="1" Grid.Column="0" TextChanged="PathBoxes_TextChanged"></TextBox>

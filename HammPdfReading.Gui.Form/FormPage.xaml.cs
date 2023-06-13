@@ -37,7 +37,7 @@ namespace Infor.HammPdfReading.Gui
         bool ConfirmButtonIsEnabled() =>
             (from driveInfo
              in DriveInfo.GetDrives()
-             select Regex.Match(DatabasePathBox.Text, $"(?<=){driveInfo.Name}\\").Success)
+             select Regex.Match(OutputPathBox.Text, $"(?<=){driveInfo.Name}\\").Success)
             .Contains(true) &&
             (from driveInfo
              in DriveInfo.GetDrives()
@@ -56,9 +56,9 @@ namespace Infor.HammPdfReading.Gui
 
                     if (pdfFolderExists)
                     {
-                        var builder = new HammPdfWriter(DatabasePathBox.Text);
+                        var builder = new HammPdfWriter(OutputPathBox.Text);
 
-                        var databaseExists = new FileInfo(DatabasePathBox.Text).Exists;
+                        var databaseExists = new FileInfo(OutputPathBox.Text).Exists;
 
                         if (!databaseExists)
                             builder.Build();
@@ -105,12 +105,10 @@ namespace Infor.HammPdfReading.Gui
 
         private void DatabasePathButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            FolderBrowserDialog folderFileDialog = new FolderBrowserDialog();
 
-            openFileDialog.Filter = "CSV (*.csv)|*.csv|Все файлы (*.*)|*.*";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-                DatabasePathBox.Text = openFileDialog.FileName;
+            if (folderFileDialog.ShowDialog() == DialogResult.OK)
+                OutputPathBox.Text = folderFileDialog.SelectedPath;
         }
 
         private void PdfPathButton_Click(object sender, RoutedEventArgs e)
