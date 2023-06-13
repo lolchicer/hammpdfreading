@@ -26,7 +26,7 @@ namespace Infor.HammPdfReading
             var text = PdfTextExtractor.GetTextFromPage(_reader, page, strategy);
 
             var module = GetModule(text);
-            module.Images = GetImages(page);
+            module.Images = GetImages(page - 1);
 
             return module;
         }
@@ -39,7 +39,7 @@ namespace Infor.HammPdfReading
                 var strategy = new SimpleTextExtractionStrategy();
                 var text = PdfTextExtractor.GetTextFromPage(_reader, page + i, strategy);
                 if (IsTablePage(text))
-                    modules.Add(GetModule(text));
+                    modules.Add(GetModule(page + i));
             }
             return modules.ToArray();
         }

@@ -12,6 +12,7 @@ namespace Infor.HammPdfReading.Csv
 
         public void Build()
         {
+            Directory.CreateDirectory(_path);
             using (FileStream stream = File.Create(Path)) ;
             JoinHeader();
         }
@@ -94,7 +95,7 @@ namespace Infor.HammPdfReading.Csv
                         var imageFolderPath = System.IO.Path.Combine(_path, module.No);
                         Directory.CreateDirectory(imageFolderPath);
                         for (int i = 0; i < module.Images.Length; i++)
-                            module.Images[i].Save(System.IO.Path.Combine(imageFolderPath, $"{i}.jpg"));
+                            File.WriteAllBytes(System.IO.Path.Combine(imageFolderPath, $"{i}.jpg"), module.Images[i]);
                     }
                 }
             }
