@@ -38,7 +38,7 @@ namespace Infor.HammPdfReading.Csv
             }
         }
 
-        public void JoinHeader()
+        void JoinHeader()
         {
             using (StreamWriter writer = new StreamWriter(Path, true, Encoding.UTF8))
             {
