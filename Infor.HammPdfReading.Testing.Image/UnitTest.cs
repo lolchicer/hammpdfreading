@@ -16,6 +16,26 @@ namespace Infor.HammPdfReading.Testing.Image
         }
 
         [TestMethod]
+        public void GetPageTest()
+        {
+            var pdfReader = new PdfReader(Path.Combine(Environment.CurrentDirectory, "res/K024 (MR 130 Z).pdf"));
+            var reader = new HammPdfReader(pdfReader);
+
+            reader.GetPage(90);
+        }
+
+        [TestMethod]
+        public void PageTest()
+        {
+            var pdfReader = new PdfReader(Path.Combine(Environment.CurrentDirectory, "res/K024 (MR 130 Z).pdf"));
+            var reader = new HammPdfReader(pdfReader);
+
+            var writer = new HammPdfWriter("output");
+            writer.Build();
+            writer.Join(reader.GetExtendedDetails(19), new[] { reader.GetModule(19) });
+        }
+
+        [TestMethod]
         public void FullTest()
         {
             var pdfReader = new PdfReader(Path.Combine(Environment.CurrentDirectory, "res/K024 (MR 130 Z).pdf"));
