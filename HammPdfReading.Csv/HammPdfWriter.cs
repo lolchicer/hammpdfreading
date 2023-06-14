@@ -1,5 +1,8 @@
 ﻿using CsvHelper;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System.Globalization;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace Infor.HammPdfReading.Csv
@@ -96,6 +99,13 @@ namespace Infor.HammPdfReading.Csv
                         Directory.CreateDirectory(imageFolderPath);
                         for (int i = 0; i < module.Images.Length; i++)
                             File.WriteAllBytes(System.IO.Path.Combine(imageFolderPath, $"{i}.jpg"), module.Images[i]);
+
+                        using (var stream = new FileStream(System.IO.Path.Combine(imageFolderPath, "pageshot.pdf"), FileMode.Create))
+                        {
+                            var document = new Document();
+                            var copy = new PdfCopy(document, stream);
+                            copy.AddPage(module.ImagePageConstruct(copy));
+                        }
                     }
                 }
             }
