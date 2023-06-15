@@ -13,8 +13,9 @@ namespace Infor.HammPdfReading
         public Action<PdfConcatenate> GetPage(int pageIndex) =>
             (concatenate) =>
             {
-                _reader.SelectPages(new[] { pageIndex });
-                concatenate.AddPages(_reader);
+                var selectingReader = new PdfReader(_reader);
+                selectingReader.SelectPages(new[] { pageIndex });
+                concatenate.AddPages(selectingReader);
             };
     }
 }
