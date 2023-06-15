@@ -36,6 +36,22 @@ namespace Infor.HammPdfReading.Testing.Image
         }
 
         [TestMethod]
+        public void PageItextsharpTest()
+        {
+            var pdfReader = new PdfReader(Path.Combine(Environment.CurrentDirectory, "res/K024 (MR 130 Z).pdf"));
+            using (var stream = new FileStream("itextsharp pageshot.pdf", FileMode.Create))
+            {
+                var concatenate = new PdfConcatenate(stream);
+
+                pdfReader.SelectPages(new[] { 18 });
+                concatenate.AddPages(pdfReader);
+
+                // pdfReader.Close();
+                concatenate.Close();
+            }
+        }
+
+        [TestMethod]
         public void FullTest()
         {
             var pdfReader = new PdfReader(Path.Combine(Environment.CurrentDirectory, "res/K024 (MR 130 Z).pdf"));
