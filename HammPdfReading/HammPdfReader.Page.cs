@@ -10,7 +10,11 @@ namespace Infor.HammPdfReading
 {
     public partial class HammPdfReader
     {
-        public Func<PdfCopy, PdfImportedPage> GetPage(int pageIndex) =>
-            (copy) => copy.GetImportedPage(_reader, pageIndex);
+        public Action<PdfConcatenate> GetPage(int pageIndex) =>
+            (concatenate) =>
+            {
+                _reader.SelectPages(new[] { pageIndex });
+                concatenate.AddPages(_reader);
+            };
     }
 }

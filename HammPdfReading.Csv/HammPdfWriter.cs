@@ -102,9 +102,9 @@ namespace Infor.HammPdfReading.Csv
 
                         using (var stream = new FileStream(System.IO.Path.Combine(imageFolderPath, "pageshot.pdf"), FileMode.Create))
                         {
-                            var document = new Document();
-                            var copy = new PdfCopy(document, stream);
-                            copy.AddPage(module.ImagePageConstruct(copy));
+                            var concatenate = new PdfConcatenate(stream);
+                            module.ImagePageWrite(concatenate);
+                            concatenate.Close();
                         }
                     }
                 }

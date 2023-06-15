@@ -9,6 +9,6 @@ namespace Infor.HammPdfReading
         public string Series { get; set; }
         public string Designation { get; set; }
         public byte[][]? Images { get; set; }
-        public Func<PdfCopy, PdfImportedPage> ImagePageConstruct { get; set; }
+        public Action<PdfConcatenate> ImagePageWrite { get; set; }
     }
 }

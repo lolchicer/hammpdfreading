@@ -27,7 +27,7 @@ namespace Infor.HammPdfReading
 
             var module = GetModule(text);
             module.Images = GetImages(page - 1);
-            module.ImagePageConstruct = GetPage(page - 1);
+            module.ImagePageWrite = GetPage(page - 1);
 
             return module;
         }
