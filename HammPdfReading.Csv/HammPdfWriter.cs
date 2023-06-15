@@ -95,7 +95,7 @@ namespace Infor.HammPdfReading.Csv
                                     csvWriter.WriteField(field);
                                 csvWriter.NextRecord();
                             }
-                        var imageFolderPath = System.IO.Path.Combine(_path, module.No);
+                        var imageFolderPath = System.IO.Path.Combine(_path, module.Series, module.No);
                         Directory.CreateDirectory(imageFolderPath);
                         for (int i = 0; i < module.Images.Length; i++)
                             File.WriteAllBytes(System.IO.Path.Combine(imageFolderPath, $"{i}.jpg"), module.Images[i]);
