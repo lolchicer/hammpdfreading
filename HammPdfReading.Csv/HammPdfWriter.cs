@@ -100,7 +100,7 @@ namespace Infor.HammPdfReading.Csv
                         for (int i = 0; i < module.Images.Length; i++)
                             File.WriteAllBytes(System.IO.Path.Combine(imageFolderPath, $"{i}.jpg"), module.Images[i]);
 
-                        using (var stream = new FileStream(System.IO.Path.Combine(imageFolderPath, "pageshot.pdf"), FileMode.Create))
+                        using (var stream = new FileStream(System.IO.Path.Combine(imageFolderPath, $"{module.No}.pdf"), FileMode.Create))
                         {
                             var concatenate = new PdfConcatenate(stream);
                             module.ImagePageWrite(concatenate);
