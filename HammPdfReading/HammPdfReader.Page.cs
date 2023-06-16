@@ -16,6 +16,7 @@ namespace Infor.HammPdfReading
                 var selectingReader = new PdfReader(_reader);
                 selectingReader.SelectPages(new[] { pageIndex });
                 concatenate.AddPages(selectingReader);
+                selectingReader.Close();
             };
     }
 }
