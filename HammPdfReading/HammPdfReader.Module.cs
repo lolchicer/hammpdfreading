@@ -10,7 +10,7 @@ namespace Infor.HammPdfReading
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        static Module GetModule(string text)
+        public static Module GetModule(string text)
         {
             var pageInfo = ContinuousMatch(
                 Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value,

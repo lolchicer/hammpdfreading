@@ -5,7 +5,7 @@ namespace Infor.HammPdfReading
 {
     public partial class HammPdfReader
     {
-        static ExtendedDetail[] GetExtendedDetails(string text)
+        public static ExtendedDetail[] GetExtendedDetails(string text)
         {
             var details = new List<ExtendedDetail>();
 
