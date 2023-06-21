@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Cli", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infor.HammPdfReading.Testing", "Infor.HammPdfReading.Testing.Image\Infor.HammPdfReading.Testing.csproj", "{39C3A461-29D3-4534-8831-C9D942E311CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infor.HammPdfReading.WebApi", "Infor.HammPdfReading.WebApi\Infor.HammPdfReading.WebApi.csproj", "{E95D2F73-E3D8-4B1A-A7BF-E76ABDBE18CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{39C3A461-29D3-4534-8831-C9D942E311CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39C3A461-29D3-4534-8831-C9D942E311CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39C3A461-29D3-4534-8831-C9D942E311CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E95D2F73-E3D8-4B1A-A7BF-E76ABDBE18CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E95D2F73-E3D8-4B1A-A7BF-E76ABDBE18CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E95D2F73-E3D8-4B1A-A7BF-E76ABDBE18CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E95D2F73-E3D8-4B1A-A7BF-E76ABDBE18CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
