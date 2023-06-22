@@ -88,8 +88,8 @@ namespace Infor.HammPdfReading.Csv
                                     detail.Unit.ToString(),
                                     detail.Designation,
                                     detail.Assembly.ToString(),
+                                    detail.Series,
                                     module.Assembly.ToString(),
-                                    module.Series,
                                     module.Designation,
                                 })
                                     csvWriter.WriteField(field);

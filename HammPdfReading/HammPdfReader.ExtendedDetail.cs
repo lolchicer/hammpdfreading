@@ -9,10 +9,9 @@ namespace Infor.HammPdfReading
         {
             var details = new List<ExtendedDetail>();
 
-            var pageInfo = ContinuousMatch(
-                Regex.Match(text, "\n[0-9]{2}\\.[0-9]{2}\\.[0-9]{2} / [0-9]{2}(.|\n)*").Value,
-                Regexes.PageInfoToArray());
-            var assembly = pageInfo[1];
+            var module = GetModule(text);
+            var assembly = module.No;
+            var series = module.Series;
 
             foreach (var detail in GetDetails(text))
                 details.Add(new ExtendedDetail()
@@ -23,7 +22,8 @@ namespace Infor.HammPdfReading
                     Quantity = detail.Quantity,
                     Unit = detail.Unit,
                     Designation = detail.Designation,
-                    Assembly = assembly
+                    Assembly = assembly,
+                    Series = series
                 });
 
             return details.ToArray();
