@@ -1,6 +1,6 @@
 ﻿using iTextSharp.text.pdf;
 
-namespace Infor.HammPdfReading.Testing
+namespace Infor.HammPdfReading.Testing.Itextsharp
 {
     [TestClass]
     public class PdfReaderTest
