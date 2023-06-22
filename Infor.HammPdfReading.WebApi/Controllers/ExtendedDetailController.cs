@@ -7,13 +7,19 @@ namespace Infor.HammPdfReading.WebApi.Controllers
     [Route("[controller]")]
     public class ExtendedDetailController : Controller
     {
-        [HttpGet("{path}")]
-        public IEnumerable<ExtendedDetail> ExtendedDetails(string path)
+        [HttpPost]
+        public IEnumerable<ExtendedDetail> ExtendedDetails(IFormFile file)
         {
-            var pdfReader = new PdfReader(path);
-            var reader = new HammPdfReader(pdfReader); 
+            using (var stream = new MemoryStream())
+            {
+                file.CopyTo(stream);
+                stream.Position = 0;
 
-            return reader.GetExtendedDetails(40, 4);
+                var pdfReader = new PdfReader(stream);
+                var reader = new HammPdfReader(pdfReader);
+
+                return reader.GetExtendedDetails();
+            }
         }
     }
 }
