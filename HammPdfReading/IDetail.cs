@@ -1,6 +1,6 @@
 ﻿namespace Infor.HammPdfReading
 {
-    internal interface IDetail
+    public interface IDetail
     {
         public double Item { get; set; }
         public string PartNo { get; set; }
