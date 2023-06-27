@@ -25,13 +25,13 @@ namespace Infor.HammPdfReading.WebApi
 
             using (var stream = new MemoryStream())
             {
-                SchemePage = new byte[stream.Length];
-
                 var concatenate = new PdfConcatenate(stream);
                 module.ImagePageWrite(concatenate);
 
+                SchemePage = new byte[stream.Length];
+
                 stream.Position = 0;
-                stream.Write(SchemePage);
+                stream.Read(SchemePage);
 
                 concatenate.Close();
             }

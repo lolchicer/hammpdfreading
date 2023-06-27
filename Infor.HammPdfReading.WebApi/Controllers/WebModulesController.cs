@@ -17,6 +17,8 @@ namespace Infor.HammPdfReading.WebApi.Controllers
     {
         private readonly ApplicationContext _context;
 
+        private readonly List<WebModule> _modules = new();
+
         public WebModulesController(ApplicationContext context)
         {
             _context = context;
@@ -25,8 +27,8 @@ namespace Infor.HammPdfReading.WebApi.Controllers
         // вапыварпвапореноапро
         private void CreateRange(int i, int count, HammPdfReader reader)
         {
-            var details = reader.GetExtendedDetails(i + 1, count - 1);
-            var modules = reader.GetModules(i + 1, count - 1);
+            var details = reader.GetExtendedDetails(i + 1, count);
+            var modules = reader.GetModules(i + 1, count);
 
             var webModules = from module in modules
                              select new WebModule(
@@ -37,22 +39,14 @@ namespace Infor.HammPdfReading.WebApi.Controllers
                              detail.Series == module.Series
                              select new WebDetail(detail));
 
-            var matchingModules = from module in webModules
-                                  where _context.WebModules.First(contextModule => 
-                                  (module.Assembly == contextModule.Assembly) &&
-                                  (module.Series == contextModule.Series)) != null
-                                  select module;
-
-            _context.WebModules.AddRange(from module in webModules
-                                         where !matchingModules.Contains(module)
-                                         select module);
-            // foreach (var module in webModules)
-                // _context.WebDetails.AddRange(module.Details);
+            _modules.AddRange(webModules);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(IFormFile file)
+        public IEnumerable<WebModule> Create(IFormFile file)
         {
+            _modules.Clear();
+
             using (var stream = new MemoryStream())
             {
                 file.CopyTo(stream);
@@ -61,13 +55,9 @@ namespace Infor.HammPdfReading.WebApi.Controllers
                 {
                     var reader = new HammPdfReader(pdfReader);
 
-                    int i = 0;
-                    int step = 10;
-                    for (; i < pdfReader.NumberOfPages; i += step)
-                        CreateRange(i, step, reader);
-                    CreateRange(i, pdfReader.NumberOfPages - i, reader);
+                    CreateRange(0, pdfReader.NumberOfPages, reader);
 
-                    return View();
+                    return _modules;
                 }
             }
         }
