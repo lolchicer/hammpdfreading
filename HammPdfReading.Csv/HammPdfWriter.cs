@@ -42,13 +42,9 @@ namespace Infor.HammPdfReading.Csv
             }
         }
 
-        void JoinHeader()
+        void JoinHeader(CsvWriter writer)
         {
-            using (StreamWriter writer = new StreamWriter(Path, true, Encoding.UTF8))
-            {
-                using (CsvWriter csvWriter = new CsvWriter(writer, new CultureInfo("ru-RU", false)))
-                {
-                    foreach (var header in new string[]
+            foreach (var header in new string[]
                     {
                         "Позиция",
                         "№",
@@ -62,19 +58,24 @@ namespace Infor.HammPdfReading.Csv
                         "Конструктивный ряд",
                         "Наименование"
                     })
-                        csvWriter.WriteField(header);
-                }
-            }
+                writer.WriteField(header);
         }
 
         public void Join(ExtendedDetail[] details, Module[] modules)
         {
-            using (StreamWriter writer = new StreamWriter(Path, true, Encoding.UTF8))
+            foreach (var module in modules)
             {
-                using (CsvWriter csvWriter = new CsvWriter(writer, new CultureInfo("ru-RU", false)))
+                var moduleFolderPath = System.IO.Path.Combine(_path, module.Series, module.No);
+                Directory.CreateDirectory(moduleFolderPath);
+
+                using (StreamWriter writer = new StreamWriter(
+                        System.IO.Path.Combine(moduleFolderPath, "table.csv"),
+                        false,
+                        Encoding.UTF8))
                 {
-                    foreach (var module in modules)
+                    using (CsvWriter csvWriter = new CsvWriter(writer, new CultureInfo("ru-RU", false)))
                     {
+                        JoinHeader(csvWriter);
                         foreach (var detail in details)
                             if (detail.Assembly == module.No)
                             {
@@ -95,23 +96,22 @@ namespace Infor.HammPdfReading.Csv
                                     csvWriter.WriteField(field);
                                 csvWriter.NextRecord();
                             }
-                        var imageFolderPath = System.IO.Path.Combine(_path, module.Series, module.No);
-                        Directory.CreateDirectory(imageFolderPath);
-                        for (int i = 0; i < module.Images.Length; i++)
-                            File.WriteAllBytes(System.IO.Path.Combine(imageFolderPath, $"{i}.jpg"), module.Images[i]);
-
-                        using (var stream = new FileStream(System.IO.Path.Combine(imageFolderPath, $"{module.No}.pdf"), FileMode.Create))
-                        {
-                            var concatenate = new PdfConcatenate(stream);
-                            module.ImagePageWrite(concatenate);
-                            concatenate.Close();
-                        }
                     }
+                }
+
+                for (int i = 0; i < module.Images.Length; i++)
+                    File.WriteAllBytes(System.IO.Path.Combine(moduleFolderPath, $"{i}.jpg"), module.Images[i]);
+
+                using (var stream = new FileStream(System.IO.Path.Combine(moduleFolderPath, "Рисунок.pdf"), FileMode.Create))
+                {
+                    var concatenate = new PdfConcatenate(stream);
+                    module.ImagePageWrite(concatenate);
+                    concatenate.Close();
                 }
             }
         }
 
-        public HammPdfWriter (string path)
+        public HammPdfWriter(string path)
         {
             _path = path;
         }
